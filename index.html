@@ -1,0 +1,3803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Dawa Billing</title>
+  <style>
+    :root {
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --line: #cbd5e1;
+      --text: #0f172a;
+      --muted: #64748b;
+      --focus: #fef08a;
+    }
+    *, *::before, *::after {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 13px;
+      line-height: 1.35;
+      user-select: none;
+    }
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+    .hidden { display: none !important; }
+    .flex { display: flex; }
+    .inline-flex { display: inline-flex; }
+    .flex-col { flex-direction: column; }
+    .flex-wrap { flex-wrap: wrap; }
+    .flex-1 { flex: 1 1 0%; }
+    .shrink-0 { flex-shrink: 0; }
+    .items-center { align-items: center; }
+    .items-start { align-items: flex-start; }
+    .items-end { align-items: flex-end; }
+    .justify-between { justify-content: space-between; }
+    .justify-center { justify-content: center; }
+    .justify-end { justify-content: flex-end; }
+    .min-h-0 { min-height: 0; }
+    .min-w-0 { min-width: 0; }
+    .w-full { width: 100%; }
+    .h-full { height: 100%; }
+    .overflow-hidden { overflow: hidden; }
+    .overflow-auto { overflow: auto; }
+    .overflow-y-auto { overflow-y: auto; }
+    .overflow-x-auto { overflow-x: auto; }
+    .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .whitespace-nowrap { white-space: nowrap; }
+    .whitespace-pre-line { white-space: pre-line; }
+    .select-text { user-select: text; }
+    .cursor-pointer { cursor: pointer; }
+    .text-left { text-align: left; }
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+    .font-medium { font-weight: 500; }
+    .font-semibold { font-weight: 600; }
+    .font-bold { font-weight: 700; }
+    .uppercase { text-transform: uppercase; }
+    .resize-none { resize: none; }
+    .border-collapse { border-collapse: collapse; }
+    .relative { position: relative; }
+    .sticky { position: sticky; }
+    .top-0 { top: 0; }
+    .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+    .fixed { position: fixed; }
+    .z-10 { z-index: 10; }
+    .z-50 { z-index: 50; }
+    .gap-1 { gap: 4px; }
+    .gap-1\.5 { gap: 6px; }
+    .gap-2 { gap: 8px; }
+    .gap-3 { gap: 12px; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* Minimalist Fluid Grid */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .col-span-1 { grid-column: span 1 / span 1; }
+    .col-span-2 { grid-column: span 2 / span 2; }
+    .col-span-3 { grid-column: span 3 / span 3; }
+    .col-span-4 { grid-column: span 4 / span 4; }
+    .col-span-5 { grid-column: span 5 / span 5; }
+    .col-span-6 { grid-column: span 6 / span 6; }
+    .col-span-7 { grid-column: span 7 / span 7; }
+    .col-span-8 { grid-column: span 8 / span 8; }
+    .col-span-12 { grid-column: span 12 / span 12; }
+
+    /* Shell */
+    .app-header {
+      background: #0f172a;
+      color: #ffffff;
+      height: 38px;
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      gap: 6px;
+    }
+    .app-main {
+      flex: 1 1 0%;
+      min-height: 0;
+      width: 100%;
+      overflow: hidden;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+    }
+    .app-footer {
+      background: #0f172a;
+      color: #94a3b8;
+      height: 22px;
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 10.5px;
+      flex-shrink: 0;
+    }
+
+    /* Tabs */
+    .nav-tab-btn {
+      height: 100%;
+      padding: 0 11px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #cbd5e1;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .nav-tab-btn:hover { color: #ffffff; }
+    .tab-btn-active {
+      background: #ffffff !important;
+      color: #0f172a !important;
+      border-bottom: 2px solid #facc15 !important;
+      font-weight: 700 !important;
+    }
+
+    /* Minimalist Form Controls */
+    .tally-label {
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      color: var(--muted);
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .tally-input {
+      width: 100%;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 5px 8px;
+      font-size: 13px;
+      line-height: 1.3;
+      color: var(--text);
+    }
+    .tally-input:focus {
+      outline: none;
+      background-color: var(--focus);
+      border-color: #0f172a;
+      box-shadow: 0 0 0 1.5px #0f172a;
+    }
+    .tally-input:disabled, .tally-input[readonly] {
+      background-color: #f8fafc;
+      color: #334155;
+    }
+    .tally-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 5px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 4px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+      color: var(--text);
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+    }
+    .tally-btn:hover:not(:disabled) {
+      background: #f8fafc;
+      border-color: #64748b;
+    }
+    .tally-btn:focus-visible {
+      outline: 2px solid #0f172a;
+      background: var(--focus);
+    }
+    .tally-btn-primary {
+      background: #0f172a;
+      color: #ffffff;
+      border-color: #0f172a;
+    }
+    .tally-btn-primary:hover:not(:disabled) { background: #1e293b; }
+    .tally-btn-success {
+      background: #15803d;
+      color: #ffffff;
+      border-color: #15803d;
+    }
+    .tally-btn-success:hover:not(:disabled) { background: #166534; }
+    .tally-btn-accent {
+      background: #fef08a;
+      color: #0f172a;
+      border-color: #ca8a04;
+    }
+    .tally-btn-danger {
+      color: #b91c1c;
+      border-color: #fca5a5;
+      background: #fef2f2;
+    }
+
+    .thin-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
+    .thin-scroll::-webkit-scrollbar-track { background: #f1f5f9; }
+    .thin-scroll::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 2px; }
+
+    /* A4 Invoice Paper (Step 2) */
+    .invoice-paper {
+      background: #ffffff;
+      color: #000000;
+      font-family: Arial, Helvetica, sans-serif;
+      width: 780px;
+      min-height: 980px;
+      padding: 34px 50px;
+      border: 1px solid #94a3b8;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.1);
+      transform-origin: top left;
+      flex-shrink: 0;
+    }
+    .invoice-paper table.tax-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1.5px solid #000000;
+    }
+    .invoice-paper table.tax-table th,
+    .invoice-paper table.tax-table td {
+      border: 1px solid #000000;
+      padding: 7px 10px;
+      font-size: 13.5px;
+      line-height: 1.4;
+      color: #000000;
+      vertical-align: top;
+    }
+    .invoice-paper .meta-grid {
+      display: grid;
+      grid-template-columns: 92px 12px 1fr;
+      row-gap: 3px;
+      font-size: 13.5px;
+      line-height: 1.38;
+    }
+
+    /* Mobile Responsive (< 680px) */
+    @media (max-width: 680px) {
+      .app-header {
+        height: auto !important;
+        flex-direction: column;
+        align-items: stretch;
+        padding: 4px 8px 0 8px;
+        gap: 3px;
+      }
+      .app-header nav {
+        height: 30px !important;
+        width: 100%;
+        justify-content: space-between;
+      }
+      .nav-tab-btn {
+        height: 30px !important;
+        padding: 0 6px;
+        font-size: 11px;
+      }
+      .form-grid { gap: 6px; }
+      .m-col-12 { grid-column: span 12 / span 12 !important; }
+      .m-col-8 { grid-column: span 8 / span 8 !important; }
+      .m-col-6 { grid-column: span 6 / span 6 !important; }
+      .m-col-4 { grid-column: span 4 / span 4 !important; }
+      .m-col-3 { grid-column: span 3 / span 3 !important; }
+      .m-col-2 { grid-column: span 2 / span 2 !important; }
+      .tally-input { padding: 4px 6px; font-size: 12px; }
+      .tally-btn { padding: 4px 8px; font-size: 11px; }
+      .hide-mobile { display: none !important; }
+    }
+
+    @media print {
+      @page { size: A4 portrait; margin: 10mm; }
+      html, body { height: auto !important; overflow: visible !important; background: #fff !important; }
+      .no-print { display: none !important; }
+      #print-Mount { display: block !important; width: 100% !important; }
+      #print-Mount .invoice-paper {
+        width: 100% !important; min-height: auto !important; padding: 10px 16px !important;
+        border: none !important; box-shadow: none !important; transform: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="flex flex-col h-[100dvh] w-full overflow-hidden">
+
+  <!-- DATALIST FOR DYNAMIC BILL TYPES (Rent, Maintenance, DG Bill, Electricity, Water, or Any Custom Type) -->
+  <datalist id="bill-types-list">
+    <option value="Rent"></option>
+    <option value="Maintenance"></option>
+    <option value="DG Bill"></option>
+    <option value="Electricity"></option>
+    <option value="Water"></option>
+    <option value="Other"></option>
+  </datalist>
+
+  <!-- TOP BAR -->
+  <header class="no-print app-header">
+    <div class="flex items-center justify-between gap-2 min-w-0">
+      <div class="flex items-center gap-2 min-w-0">
+        <span style="background:#facc15;color:#0f172a;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:800;" class="mono shrink-0">TALLY</span>
+        <span id="hdr-company-name" class="font-bold text-sm truncate">Dawa &amp; Co.</span>
+        <span id="hdr-company-gst" class="hidden">27AAGFD1570N1Z7</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <button type="button" id="btn-cloud-status" class="tally-btn" style="padding:2px 7px;font-size:10.5px;background:#1e293b;color:#4ade80;border-color:#334155;">
+          <span id="cloud-status-dot">●</span>
+          <span id="cloud-status-text">Auto-Save ON</span>
+        </button>
+        <button type="button" id="btn-download-offline-app" class="tally-btn tally-btn-accent" style="padding:2px 7px;font-size:10.5px;">
+          <span>Save App</span>
+        </button>
+      </div>
+    </div>
+
+    <nav class="flex items-center h-full overflow-x-auto no-scrollbar">
+      <button type="button" id="nav-tab-invoice" data-tab="invoice" class="nav-tab-btn tab-btn-active">
+        <span>1. Invoice</span>
+      </button>
+      <button type="button" id="nav-tab-sales" data-tab="sales" class="nav-tab-btn">
+        <span>2. Sales</span>
+        <span id="badge-sales-count" class="mono" style="background:#334155;color:#f8fafc;font-size:10px;padding:0 5px;border-radius:99px;">8</span>
+      </button>
+      <button type="button" id="nav-tab-customers" data-tab="customers" class="nav-tab-btn">
+        <span>3. Clients</span>
+      </button>
+      <button type="button" id="nav-tab-sequence" data-tab="sequence" class="nav-tab-btn">
+        <span>4. Seq</span>
+      </button>
+      <button type="button" id="nav-tab-backup" data-tab="backup" class="nav-tab-btn">
+        <span>5. Backup</span>
+      </button>
+    </nav>
+  </header>
+
+  <!-- MAIN WORKSPACE -->
+  <main class="no-print app-main">
+
+    <!-- =========================================================================
+         TAB 1: MINIMALIST INVOICE FORM (Step 1 = Form Only | Step 2 = Preview Only)
+    ========================================================================== -->
+    <section id="view-invoice" class="h-full w-full flex flex-col overflow-hidden">
+
+      <!-- STEP 1: ULTRA-CLEAN MINIMALIST FORM -->
+      <div id="inv-form-pane" class="flex-1 min-h-0 w-full flex items-start justify-center overflow-y-auto thin-scroll" style="padding:8px;">
+        <form id="invoice-entry-form" style="max-width:580px;width:100%;margin:auto;background:#ffffff;border:1px solid #cbd5e1;border-radius:6px;padding:12px 14px;box-shadow:0 2px 6px rgba(15,23,42,0.04);display:flex;flex-direction:column;gap:8px;" onsubmit="return false;">
+          <input type="hidden" id="inv-id" value="" />
+
+          <!-- Minimal Top Strip -->
+          <div class="flex items-center justify-between gap-2" style="border-bottom:1px solid #f1f5f9;padding-bottom:6px;">
+            <div class="flex items-center gap-2">
+              <span id="inv-mode-badge" class="mono" style="padding:2px 6px;font-size:10px;font-weight:700;border-radius:3px;background:#dcfce7;color:#14532d;">NEW</span>
+              <span id="summary-party-pill" class="mono" style="font-size:11px;color:#475569;">Dawa &amp; Co.</span>
+              <span id="inv-status-text" class="hidden"></span>
+            </div>
+            <div class="flex items-center gap-1">
+              <button type="button" id="btn-toggle-period" class="tally-btn" style="padding:2px 7px;font-size:10.5px;">+ Period</button>
+              <button type="button" id="btn-form-new" class="tally-btn" style="padding:2px 7px;font-size:10.5px;">Reset</button>
+              <button type="button" id="btn-open-last-preview" class="tally-btn hidden" style="padding:2px 7px;font-size:10.5px;">Preview</button>
+            </div>
+          </div>
+
+          <!-- Row 1: Client & Bill -->
+          <div class="form-grid">
+            <div class="col-span-6 m-col-6">
+              <label class="tally-label" for="inv-customer-select">Client</label>
+              <select id="inv-customer-select" data-tally-nav="1" class="tally-input font-bold"></select>
+            </div>
+            <div class="col-span-6 m-col-6">
+              <label class="tally-label" for="inv-unit-select">Bill</label>
+              <select id="inv-unit-select" data-tally-nav="2" class="tally-input font-semibold"></select>
+            </div>
+          </div>
+
+          <!-- Row 2: Month, Year, Date, Inv No. -->
+          <div class="form-grid">
+            <div class="col-span-3 m-col-6">
+              <label class="tally-label" for="inv-bill-month">Month</label>
+              <select id="inv-bill-month" data-tally-nav="3" class="tally-input">
+                <option value="January">Jan</option>
+                <option value="February">Feb</option>
+                <option value="March">Mar</option>
+                <option value="April">Apr</option>
+                <option value="May">May</option>
+                <option value="June">Jun</option>
+                <option value="July">Jul</option>
+                <option value="August">Aug</option>
+                <option value="September">Sep</option>
+                <option value="October">Oct</option>
+                <option value="November">Nov</option>
+                <option value="December">Dec</option>
+              </select>
+            </div>
+            <div class="col-span-2 m-col-6">
+              <label class="tally-label" for="inv-bill-year">Year</label>
+              <input type="number" id="inv-bill-year" data-tally-nav="4" class="tally-input mono" min="2000" max="2099" value="2026" />
+            </div>
+            <div class="col-span-3 m-col-6">
+              <label class="tally-label" for="inv-date-text">Date</label>
+              <input type="text" id="inv-date-text" data-tally-nav="5" class="tally-input" />
+            </div>
+            <div class="col-span-4 m-col-6">
+              <label class="tally-label" for="inv-number">Inv No.</label>
+              <input type="text" id="inv-number" data-tally-nav="6" class="tally-input mono font-bold" />
+            </div>
+          </div>
+
+          <!-- Row 2B: Period & Bill Type Bar (Auto-shown for DG Bill / Period Bills, or via + Period button) -->
+          <div id="period-fields-box" class="hidden form-grid" style="background:#f8fafc;padding:6px 8px;border:1px solid #e2e8f0;border-radius:4px;">
+            <div class="col-span-4 m-col-4">
+              <label class="tally-label" for="inv-bill-type">Type</label>
+              <input type="text" id="inv-bill-type" list="bill-types-list" data-tally-nav="7" class="tally-input font-semibold" value="Rent" />
+            </div>
+            <div class="col-span-4 m-col-4">
+              <label class="tally-label" for="inv-period-from">Period From</label>
+              <input type="text" id="inv-period-from" data-tally-nav="8" class="tally-input mono" />
+            </div>
+            <div class="col-span-4 m-col-4">
+              <label class="tally-label" for="inv-period-to">Period To</label>
+              <input type="text" id="inv-period-to" data-tally-nav="9" class="tally-input mono" />
+            </div>
+          </div>
+
+          <!-- Row 3: Particulars -->
+          <div>
+            <div class="flex items-center justify-between" style="margin-bottom:2px;">
+              <label class="tally-label" style="margin-bottom:0;" for="inv-particulars">Particulars</label>
+              <button type="button" id="btn-reset-particulars" style="font-size:10px;color:#64748b;background:none;border:none;padding:0;cursor:pointer;text-decoration:underline;">Reset</button>
+            </div>
+            <textarea id="inv-particulars" data-tally-nav="10" rows="3" class="tally-input font-medium resize-none"></textarea>
+          </div>
+
+          <!-- Row 4: Amount & Clean Live Tax Summary -->
+          <div style="background:#f8fafc;border:1px solid #cbd5e1;border-radius:5px;padding:8px 10px;">
+            <div class="form-grid items-center">
+              <div class="col-span-5 m-col-6">
+                <label class="tally-label" for="inv-base-amount" style="color:#0f172a;">Amount (Rs.)</label>
+                <input type="number" step="0.01" id="inv-base-amount" data-tally-nav="11" class="tally-input mono font-bold" style="font-size:15px;border-color:#0f172a;" value="667236" />
+              </div>
+              <div class="col-span-7 m-col-6 flex flex-col justify-end text-right">
+                <div style="font-size:11px;color:#475569;" class="mono">
+                  CGST <span id="lbl-cgst-rate">9</span>%: <strong id="lbl-cgst-amt">60,051</strong> &middot;
+                  SGST <span id="lbl-sgst-rate">9</span>%: <strong id="lbl-sgst-amt">60,051</strong>
+                  <span id="lbl-round-wrap" class="hidden"> &middot; R.Off: <strong id="lbl-round-amt">0.30</strong></span>
+                </div>
+                <div style="font-size:15px;font-weight:800;color:#0f172a;margin-top:2px;" class="mono">
+                  Total: Rs. <span id="lbl-total-amt">7,87,338</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between" style="margin-top:6px;padding-top:5px;border-top:1px dashed #cbd5e1;font-size:11px;">
+              <label class="inline-flex items-center cursor-pointer" style="gap:5px;color:#334155;font-weight:500;">
+                <input type="checkbox" id="inv-update-unit-default-amt" checked />
+                <span>Update default rate</span>
+              </label>
+              <button type="button" id="btn-toggle-extra-fields" style="font-size:10.5px;color:#475569;background:none;border:none;padding:0;cursor:pointer;text-decoration:underline;">More Fields</button>
+            </div>
+          </div>
+
+          <!-- Optional Extra Fields (Hidden by default to keep form 100% clutter-free) -->
+          <div id="extra-fields-box" class="hidden form-grid" style="background:#ffffff;border:1px solid #e2e8f0;border-radius:4px;padding:8px;">
+            <div class="col-span-3 m-col-4">
+              <label class="tally-label" for="inv-cgst-rate">CGST %</label>
+              <input type="number" step="0.1" id="inv-cgst-rate" class="tally-input mono" value="9" />
+            </div>
+            <div class="col-span-3 m-col-4">
+              <label class="tally-label" for="inv-sgst-rate">SGST %</label>
+              <input type="number" step="0.1" id="inv-sgst-rate" class="tally-input mono" value="9" />
+            </div>
+            <div class="col-span-3 m-col-4">
+              <label class="tally-label" for="inv-round-off">Round Off</label>
+              <input type="number" step="0.01" id="inv-round-off" class="tally-input mono" value="0" />
+            </div>
+            <div class="col-span-3 m-col-4">
+              <label class="tally-label" for="inv-sac-code">SAC</label>
+              <input type="text" id="inv-sac-code" class="tally-input mono" value="997212" />
+            </div>
+            <div class="col-span-4 m-col-4">
+              <label class="tally-label" for="inv-cgst-amt">CGST Rs.</label>
+              <input type="number" step="0.01" id="inv-cgst-amt" class="tally-input mono" value="60051" />
+            </div>
+            <div class="col-span-4 m-col-4">
+              <label class="tally-label" for="inv-sgst-amt">SGST Rs.</label>
+              <input type="number" step="0.01" id="inv-sgst-amt" class="tally-input mono" value="60051" />
+            </div>
+            <div class="col-span-4 m-col-12">
+              <label class="tally-label" for="inv-total-amount">Total Rs.</label>
+              <input type="text" id="inv-total-amount" readonly class="tally-input mono font-bold" value="787338" />
+            </div>
+            <div class="col-span-12">
+              <label class="tally-label" for="inv-words">Words</label>
+              <input type="text" id="inv-words" class="tally-input" />
+            </div>
+            <div class="col-span-6 m-col-6">
+              <label class="tally-label" for="inv-comp-name">Company</label>
+              <input type="text" id="inv-comp-name" class="tally-input" />
+            </div>
+            <div class="col-span-6 m-col-6">
+              <label class="tally-label" for="inv-comp-gst">Comp GST</label>
+              <input type="text" id="inv-comp-gst" class="tally-input mono" />
+            </div>
+            <div class="col-span-6 m-col-6">
+              <label class="tally-label" for="inv-comp-pan">Comp PAN</label>
+              <input type="text" id="inv-comp-pan" class="tally-input mono" />
+            </div>
+            <div class="col-span-6 m-col-6">
+              <label class="tally-label" for="inv-party-name">Client Name</label>
+              <input type="text" id="inv-party-name" class="tally-input" />
+            </div>
+            <div class="col-span-6 m-col-6">
+              <label class="tally-label" for="inv-party-gst">Client GST</label>
+              <input type="text" id="inv-party-gst" class="tally-input mono" />
+            </div>
+            <div class="col-span-6 m-col-6">
+              <label class="tally-label" for="inv-party-pan">Client PAN</label>
+              <input type="text" id="inv-party-pan" class="tally-input mono" />
+            </div>
+            <div class="col-span-6 m-col-6">
+              <label class="tally-label" for="inv-party-attn">Attn</label>
+              <input type="text" id="inv-party-attn" class="tally-input" />
+            </div>
+            <div class="col-span-6 m-col-6">
+              <label class="tally-label" for="inv-party-address">Client Address</label>
+              <textarea id="inv-party-address" rows="1" class="tally-input resize-none"></textarea>
+            </div>
+            <div class="col-span-12 hidden">
+              <input type="text" id="inv-comp-address" />
+              <input type="text" id="inv-closing-note" />
+              <input type="checkbox" id="inv-auto-particulars" checked />
+              <input type="date" id="inv-date-picker" />
+              <input type="text" id="inv-signatory-name" />
+              <input type="text" id="inv-sign-timestamp" />
+              <button type="button" id="btn-mob-form">Form</button>
+              <button type="button" id="btn-mob-preview">Preview</button>
+              <button type="button" id="btn-form-edit">Edit</button>
+              <button type="button" id="btn-form-pdf">PDF</button>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="button" id="btn-form-submit-save" data-tally-nav="12" class="tally-btn tally-btn-primary w-full" style="padding:8px 14px;font-size:13px;">
+            <span>Save &amp; View Invoice (Enter)</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- STEP 2: GENERATED INVOICE PREVIEW SCREEN (Shown ONLY After Saving) -->
+      <div id="inv-preview-pane" class="hidden flex-1 min-h-0 w-full flex-col overflow-hidden">
+        <div style="background:#ffffff;border-bottom:1px solid #cbd5e1;padding:6px 12px;" class="flex flex-wrap items-center justify-between gap-2 shrink-0">
+          <div class="flex items-center gap-2">
+            <span class="mono" style="padding:2px 6px;font-size:10px;font-weight:700;border-radius:3px;background:#dcfce7;color:#14532d;">SAVED</span>
+            <span id="preview-bar-title" class="font-bold text-sm truncate">DAW/2026-27/087</span>
+          </div>
+
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <button type="button" id="btn-inv-pdf" class="tally-btn tally-btn-success">PDF</button>
+            <button type="button" id="btn-inv-print" class="tally-btn">Print</button>
+            <button type="button" id="btn-inv-edit-unlock" class="tally-btn tally-btn-accent">Edit</button>
+            <button type="button" id="btn-inv-new" class="tally-btn tally-btn-primary">+ New</button>
+            <button type="button" id="btn-inv-save" class="tally-btn">Save</button>
+            <button type="button" id="btn-inv-delete" class="tally-btn tally-btn-danger">Del</button>
+          </div>
+        </div>
+
+        <div id="invoice-scale-wrapper" class="flex-1 min-h-0 w-full flex items-center justify-center overflow-hidden" style="background:#cbd5e1;padding:8px;">
+          <div id="invoice-scale-sizer" style="position:relative;overflow:hidden;flex-shrink:0;">
+            <div id="invoice-render-target" class="invoice-paper select-text" style="position:absolute;top:0;left:0;">
+              <div class="text-center">
+                <h1 id="pv-comp-name" style="font-size:22px;font-weight:700;margin:0;color:#000;">Dawa &amp; Co.</h1>
+              </div>
+              <div style="border-top:1px solid #000;border-bottom:1px solid #000;margin:6px 0;padding:4px 0;" class="text-center">
+                <p id="pv-comp-address" style="font-size:12.5px;margin:0;color:#000;">Land Lord Office, 93/E, Morland Road, Arab Stable, Opp. BEST Quarter, Mumbai - 400008.</p>
+              </div>
+
+              <div style="margin-top:18px;">
+                <div class="meta-grid"><div>Date</div><div>:</div><div id="pv-date">1st November 2026</div></div>
+                <div class="meta-grid"><div>Invoice No.</div><div>:</div><div id="pv-inv-no">DAW/2026-27/087</div></div>
+                <div id="row-comp-pan" class="meta-grid"><div>PAN</div><div>:</div><div id="pv-comp-pan"></div></div>
+                <div class="meta-grid"><div>GST No.</div><div>:</div><div id="pv-comp-gst">27AAGFD1570N1Z7</div></div>
+              </div>
+
+              <div style="margin-top:20px;font-size:13.5px;line-height:1.38;">
+                <div>To,</div>
+                <div id="pv-party-name" style="font-weight:700;margin-top:2px;">Atlas Copco (India) Ltd.</div>
+                <div id="pv-party-address" style="margin-top:8px;" class="whitespace-pre-line">Mantri Alpine, Bavdhan,
+Pune.</div>
+              </div>
+
+              <div style="margin-top:14px;">
+                <div class="meta-grid"><div>GST No.</div><div>:</div><div id="pv-party-gst">27AAACA4074D1Z2</div></div>
+                <div id="row-party-pan" class="meta-grid"><div>PAN</div><div>:</div><div id="pv-party-pan"></div></div>
+                <div id="pv-attn-row" style="margin-top:8px;font-weight:700;" class="meta-grid">
+                  <div>Kind Attn</div><div>:</div><div id="pv-party-attn">Mr. Anant Murkute</div>
+                </div>
+              </div>
+
+              <div style="margin-top:18px;margin-bottom:10px;" class="text-center">
+                <h2 style="font-size:14.5px;font-weight:700;text-transform:uppercase;margin:0;">TAX INVOICE</h2>
+              </div>
+
+              <table class="tax-table">
+                <thead>
+                  <tr>
+                    <th style="width: 8%; text-align: center;">S.N</th>
+                    <th style="width: 72%; text-align: left;">Particulars</th>
+                    <th style="width: 20%; text-align: center;">Amount (Rs.)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="text-align: center;">1</td>
+                    <td id="pv-particulars" class="whitespace-pre-line">Leave &amp; licence fees for Unit No.301 at Mantri Alpine (14599 Sq.ft.) for November - 2026.</td>
+                    <td id="pv-base-amt" style="text-align: right; padding-right: 14px;">667236</td>
+                  </tr>
+                  <tr id="pv-row-cgst">
+                    <td style="text-align: center;">2</td>
+                    <td>
+                      <div style="display:flex;align-items:center;justify-content:space-between;padding-right:20px;">
+                        <div>CGST @ <span id="pv-cgst-rate">9</span>%</div>
+                        <div id="pv-sac-display">(Service Accounting Code : 997212)</div>
+                      </div>
+                    </td>
+                    <td id="pv-cgst-amt" style="text-align: right; padding-right: 14px;">60051</td>
+                  </tr>
+                  <tr id="pv-row-sgst">
+                    <td style="text-align: center;">3</td>
+                    <td>
+                      <div>SGST @ <span id="pv-sgst-rate">9</span>%</div>
+                    </td>
+                    <td id="pv-sgst-amt" style="text-align: right; padding-right: 14px;">60051</td>
+                  </tr>
+                  <tr id="pv-row-round" class="hidden">
+                    <td style="text-align: center;">4</td>
+                    <td>Round Off</td>
+                    <td id="pv-round-amt" style="text-align: right; padding-right: 14px;">0.30</td>
+                  </tr>
+                  <tr>
+                    <td id="pv-total-sn" style="text-align: center; font-weight: 700;">4</td>
+                    <td style="font-weight: 700;">Total</td>
+                    <td id="pv-total-amt" style="text-align: right; padding-right: 14px; font-weight: 700;">787338</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div style="margin-top:12px;font-size:13.5px;font-weight:700;">
+                (In Words : <span id="pv-words">seven hundred eighty-seven thousand, three hundred thirty-eight</span>)
+              </div>
+
+              <div id="pv-closing-note" style="margin-top:18px;font-size:13.5px;">
+                We request you to release the aforesaid payment at the earliest.
+              </div>
+
+              <div style="margin-top:18px;font-size:13.5px;">
+                Thanking you,
+              </div>
+
+              <div style="margin-top:18px;font-size:13.5px;line-height:1.45;">
+                <span style="font-weight:700;">Declaration :</span> <span id="pv-declaration">We declared that this invoice shows the actual price of the Service described and that all particulars are true and correct.</span>
+              </div>
+
+              <div style="margin-top:24px;font-size:13.5px;">
+                <div id="pv-sign-comp" style="font-weight:700;">Dawa &amp; Co.</div>
+                <div id="pv-sign-block" style="height:40px;">
+                  <span id="pv-sign-line1" class="hidden"></span>
+                  <span id="pv-sign-line2" class="hidden"></span>
+                </div>
+                <div>Authorised Signatory.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ==========================================
+         TAB 2: SALES RECORD
+    =========================================== -->
+    <section id="view-sales" class="hidden h-full w-full flex flex-col overflow-hidden" style="background:#ffffff;">
+      <div style="padding:8px 12px;background:#f8fafc;border-bottom:1px solid #cbd5e1;" class="flex flex-wrap items-end justify-between gap-2 shrink-0">
+        <div class="flex flex-wrap items-end" style="gap:6px;">
+          <div style="width:160px;">
+            <label class="tally-label" for="flt-customer">Client</label>
+            <select id="flt-customer" class="tally-input">
+              <option value="ALL">All</option>
+            </select>
+          </div>
+          <div style="width:120px;">
+            <label class="tally-label" for="flt-bill-type">Type</label>
+            <select id="flt-bill-type" class="tally-input">
+              <option value="ALL">All</option>
+              <option value="Rent">Rent</option>
+              <option value="Maintenance">Maintenance</option>
+              <option value="DG Bill">DG Bill</option>
+            </select>
+          </div>
+          <div style="width:100px;">
+            <label class="tally-label" for="flt-month">Month</label>
+            <select id="flt-month" class="tally-input">
+              <option value="ALL">All</option>
+              <option value="January">Jan</option>
+              <option value="February">Feb</option>
+              <option value="March">Mar</option>
+              <option value="April">Apr</option>
+              <option value="May">May</option>
+              <option value="June">Jun</option>
+              <option value="July">Jul</option>
+              <option value="August">Aug</option>
+              <option value="September">Sep</option>
+              <option value="October">Oct</option>
+              <option value="November">Nov</option>
+              <option value="December">Dec</option>
+            </select>
+          </div>
+          <div style="width:76px;">
+            <label class="tally-label" for="flt-year">Year</label>
+            <select id="flt-year" class="tally-input mono">
+              <option value="ALL">All</option>
+              <option value="2025">2025</option>
+              <option value="2026">2026</option>
+              <option value="2027">2027</option>
+            </select>
+          </div>
+          <div style="width:140px;">
+            <label class="tally-label" for="flt-search">Search</label>
+            <input type="text" id="flt-search" class="tally-input" />
+          </div>
+          <button type="button" id="btn-flt-reset" class="tally-btn">Reset</button>
+        </div>
+
+        <div class="flex items-center" style="gap:6px;">
+          <button type="button" id="btn-sales-export-csv" class="tally-btn">CSV</button>
+          <button type="button" id="btn-sales-new-inv" class="tally-btn tally-btn-primary">+ New</button>
+        </div>
+      </div>
+
+      <div class="flex-1 min-h-0 overflow-auto thin-scroll">
+        <table class="w-full border-collapse text-left">
+          <thead style="background:#f1f5f9;border-bottom:1px solid #cbd5e1;font-size:10.5px;color:#475569;" class="sticky top-0 z-10 uppercase">
+            <tr>
+              <th style="padding:6px 8px;border-right:1px solid #e2e8f0;width:34px;" class="text-center">#</th>
+              <th style="padding:6px 8px;border-right:1px solid #e2e8f0;">Inv No.</th>
+              <th style="padding:6px 8px;border-right:1px solid #e2e8f0;">Date</th>
+              <th style="padding:6px 8px;border-right:1px solid #e2e8f0;">Client &amp; Bill</th>
+              <th style="padding:6px 8px;border-right:1px solid #e2e8f0;">Type</th>
+              <th style="padding:6px 8px;border-right:1px solid #e2e8f0;" class="text-right">Base</th>
+              <th style="padding:6px 8px;border-right:1px solid #e2e8f0;" class="text-right">GST</th>
+              <th style="padding:6px 8px;border-right:1px solid #e2e8f0;" class="text-right">Total</th>
+              <th style="padding:6px 8px;" class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="sales-table-body" style="font-size:12px;"></tbody>
+        </table>
+      </div>
+
+      <div style="padding:6px 12px;background:#0f172a;color:#ffffff;" class="flex flex-wrap items-center justify-between gap-2 shrink-0">
+        <div class="flex items-center" style="gap:12px;font-size:11.5px;">
+          <span>Count: <strong id="sum-count" class="mono" style="color:#facc15;">8</strong></span>
+          <span>Base: <strong id="sum-base" class="mono">0</strong></span>
+          <span>GST: <strong id="sum-gst" class="mono">0</strong></span>
+        </div>
+        <div style="font-size:13px;font-weight:700;">
+          Total: <span id="sum-grand" class="mono" style="color:#facc15;">0</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         TAB 3: CLIENTS (2 Clean Screens: List & Form)
+    =========================================== -->
+    <section id="view-customers" class="hidden h-full w-full flex flex-col overflow-hidden" style="background:#ffffff;">
+      <div style="padding:6px 12px;background:#f8fafc;border-bottom:1px solid #cbd5e1;" class="flex items-center justify-between gap-2 shrink-0">
+        <div class="flex items-center" style="gap:6px;">
+          <button type="button" id="btn-cust-screen-list" class="tally-btn tally-btn-primary">
+            <span>Clients</span>
+            <span id="badge-cust-count" class="mono" style="margin-left:3px;padding:0 5px;font-size:10px;border-radius:99px;background:#334155;color:#fff;">3</span>
+          </button>
+          <button type="button" id="btn-cust-screen-form" class="tally-btn">
+            <span>+ Add Client</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- SCREEN 3A: SAVED CLIENTS -->
+      <div id="cust-screen-list" class="flex-1 min-h-0 overflow-auto thin-scroll" style="padding:10px;">
+        <div id="customers-cards-container" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(290px, 1fr));gap:10px;"></div>
+      </div>
+
+      <!-- SCREEN 3B: MINIMALIST CLIENT & BILL TEMPLATES FORM -->
+      <div id="cust-screen-form" class="hidden flex-1 min-h-0 overflow-auto thin-scroll" style="padding:10px;background:#f1f5f9;">
+        <form id="customer-reg-form" style="max-width:860px;margin:0 auto;background:#ffffff;border:1px solid #cbd5e1;border-radius:6px;padding:12px;display:flex;flex-direction:column;gap:8px;" onsubmit="return false;">
+          <div class="flex items-center justify-between gap-2" style="border-bottom:1px solid #e2e8f0;padding-bottom:6px;">
+            <h2 id="cust-form-title" style="font-size:13.5px;font-weight:700;margin:0;">Client Details</h2>
+            <div class="flex items-center" style="gap:6px;">
+              <button type="button" id="btn-cust-cancel" class="tally-btn">Back</button>
+              <button type="button" id="btn-cust-save" class="tally-btn tally-btn-primary">Save</button>
+            </div>
+          </div>
+
+          <input type="hidden" id="cust-edit-id" value="" />
+
+          <div class="form-grid" style="background:#f8fafc;padding:8px;border:1px solid #e2e8f0;border-radius:4px;">
+            <div class="col-span-4 m-col-4">
+              <label class="tally-label" for="cust-comp-name">Our Company</label>
+              <input type="text" id="cust-comp-name" data-cust-nav="1" class="tally-input font-bold" value="Dawa & Co." />
+            </div>
+            <div class="col-span-4 m-col-4">
+              <label class="tally-label" for="cust-comp-gst">Our GST</label>
+              <input type="text" id="cust-comp-gst" data-cust-nav="2" class="tally-input mono" value="27AAGFD1570N1Z7" />
+            </div>
+            <div class="col-span-4 m-col-4">
+              <label class="tally-label" for="cust-comp-pan">Our PAN</label>
+              <input type="text" id="cust-comp-pan" data-cust-nav="3" class="tally-input mono" />
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="col-span-4 m-col-12">
+              <label class="tally-label" for="cust-name">Client Name</label>
+              <input type="text" id="cust-name" data-cust-nav="4" class="tally-input font-semibold" required />
+            </div>
+            <div class="col-span-3 m-col-4">
+              <label class="tally-label" for="cust-gst">Client GST</label>
+              <input type="text" id="cust-gst" data-cust-nav="5" class="tally-input mono uppercase" />
+            </div>
+            <div class="col-span-2 m-col-4">
+              <label class="tally-label" for="cust-pan">Client PAN</label>
+              <input type="text" id="cust-pan" data-cust-nav="6" class="tally-input mono uppercase" />
+            </div>
+            <div class="col-span-3 m-col-4">
+              <label class="tally-label" for="cust-attn">Attn</label>
+              <input type="text" id="cust-attn" data-cust-nav="7" class="tally-input" />
+            </div>
+            <div class="col-span-12">
+              <label class="tally-label" for="cust-address">Address</label>
+              <textarea id="cust-address" data-cust-nav="8" rows="2" class="tally-input resize-none"></textarea>
+            </div>
+          </div>
+
+          <div style="border-top:1px solid #e2e8f0;padding-top:8px;">
+            <div class="flex items-center justify-between gap-2" style="margin-bottom:6px;">
+              <span style="font-size:11px;font-weight:700;text-transform:uppercase;color:#334155;">Bills / Units (Rent, Maintenance, DG Bill, or Custom)</span>
+              <button type="button" id="btn-add-unit-row" class="tally-btn tally-btn-accent">+ Add Bill</button>
+            </div>
+            <div id="cust-units-container" class="thin-scroll" style="display:flex;flex-direction:column;gap:6px;max-height:240px;overflow-y:auto;padding-right:2px;"></div>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         TAB 4: SEQUENCE
+    =========================================== -->
+    <section id="view-sequence" class="hidden h-full w-full flex flex-col overflow-hidden" style="background:#ffffff;padding:10px;">
+      <div style="max-width:960px;margin:0 auto;width:100%;height:100%;display:flex;flex-direction:column;gap:8px;">
+        <div class="flex items-center justify-between gap-2 shrink-0">
+          <h2 style="font-size:13.5px;font-weight:700;margin:0;">Invoice Sequences</h2>
+          <button type="button" id="btn-seq-save-all" class="tally-btn tally-btn-primary">Save</button>
+        </div>
+
+        <div class="flex-1 min-h-0 overflow-auto thin-scroll" style="border:1px solid #cbd5e1;border-radius:4px;">
+          <table class="w-full border-collapse text-left">
+            <thead style="background:#f1f5f9;border-bottom:1px solid #cbd5e1;font-size:10.5px;color:#475569;" class="sticky top-0 uppercase">
+              <tr>
+                <th style="padding:6px 8px;border-right:1px solid #e2e8f0;">Client</th>
+                <th style="padding:6px 8px;border-right:1px solid #e2e8f0;">Bill</th>
+                <th style="padding:6px 8px;border-right:1px solid #e2e8f0;">Type</th>
+                <th style="padding:6px 8px;border-right:1px solid #e2e8f0;">Prefix</th>
+                <th style="padding:6px 8px;border-right:1px solid #e2e8f0;width:90px;">Next #</th>
+                <th style="padding:6px 8px;border-right:1px solid #e2e8f0;width:70px;">Pad</th>
+                <th style="padding:6px 8px;">Preview</th>
+              </tr>
+            </thead>
+            <tbody id="sequence-table-body" style="font-size:12px;"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         TAB 5: BACKUP & RESTORE
+    =========================================== -->
+    <section id="view-backup" class="hidden h-full w-full flex flex-col overflow-y-auto thin-scroll" style="background:#f1f5f9;padding:10px;">
+      <div style="max-width:720px;margin:auto;width:100%;">
+        <div style="background:#ffffff;border:1px solid #cbd5e1;border-radius:6px;padding:14px;display:flex;flex-direction:column;gap:12px;">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <h2 style="font-size:14px;font-weight:700;margin:0;">Lifetime Cloud Auto-Sync &amp; Backup</h2>
+            <button type="button" id="btn-backup-offline-html" class="tally-btn tally-btn-success">Save App (.html)</button>
+          </div>
+
+          <!-- GITHUB LIFETIME CLOUD DATABASE AUTO-SYNC CARD -->
+          <div style="padding:12px;border:1.5px solid #0f172a;border-radius:5px;background:#f8fafc;display:flex;flex-direction:column;gap:8px;">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <span class="mono" style="padding:2px 6px;font-size:10px;font-weight:700;background:#dcfce7;color:#14532d;border-radius:3px;">GITHUB CLOUD DATABASE (LIFETIME AUTO-SAVE)</span>
+                <div style="font-size:12px;color:#334155;margin-top:3px;">Ek baar apna GitHub Repo aur Token connect karein — har entry, edit, aur bill turant aapke GitHub repo (`dawa_db.json`) mein automatic save hoga.</div>
+              </div>
+              <span id="gh-sync-badge" class="mono" style="font-size:11px;font-weight:700;color:#475569;">Local Auto-Save Active</span>
+            </div>
+            <div class="form-grid items-end">
+              <div class="col-span-4 m-col-12">
+                <label class="tally-label" for="gh-repo-input">GitHub Repo (username/repo)</label>
+                <input type="text" id="gh-repo-input" class="tally-input mono" />
+              </div>
+              <div class="col-span-5 m-col-12">
+                <label class="tally-label" for="gh-token-input">GitHub Token (Classic / Fine-Grained PAT)</label>
+                <input type="password" id="gh-token-input" class="tally-input mono" />
+              </div>
+              <div class="col-span-3 m-col-12 flex gap-1">
+                <button type="button" id="btn-gh-connect" class="tally-btn tally-btn-primary flex-1">Connect &amp; Sync</button>
+                <button type="button" id="btn-gh-pull" class="tally-btn">Pull</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="col-span-3 m-col-6" style="padding:8px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;">
+              <div style="font-size:10px;font-weight:700;color:#64748b;">COMPANY</div>
+              <div id="stat-company" style="font-size:12px;font-weight:700;margin-top:2px;" class="truncate">Dawa &amp; Co.</div>
+            </div>
+            <div class="col-span-3 m-col-6" style="padding:8px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;">
+              <div style="font-size:10px;font-weight:700;color:#64748b;">CLIENTS</div>
+              <div id="stat-customers" class="mono" style="font-size:15px;font-weight:700;margin-top:2px;">3</div>
+            </div>
+            <div class="col-span-3 m-col-6" style="padding:8px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;">
+              <div style="font-size:10px;font-weight:700;color:#64748b;">BILLS</div>
+              <div id="stat-units" class="mono" style="font-size:15px;font-weight:700;margin-top:2px;">8</div>
+            </div>
+            <div class="col-span-3 m-col-6" style="padding:8px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;">
+              <div style="font-size:10px;font-weight:700;color:#64748b;">INVOICES</div>
+              <div id="stat-invoices" class="mono" style="font-size:15px;font-weight:700;margin-top:2px;">8</div>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="col-span-6 m-col-12" style="padding:10px;border:1px solid #cbd5e1;border-radius:4px;background:#f8fafc;display:flex;flex-direction:column;gap:8px;">
+              <div style="font-size:12.5px;font-weight:700;">1. Export Backup</div>
+              <div class="flex flex-wrap" style="gap:6px;">
+                <button type="button" id="btn-backup-download" class="tally-btn tally-btn-primary">Download (.json)</button>
+                <button type="button" id="btn-backup-copy" class="tally-btn">Copy Text</button>
+              </div>
+            </div>
+
+            <div class="col-span-6 m-col-12" style="padding:10px;border:1px solid #cbd5e1;border-radius:4px;background:#f8fafc;display:flex;flex-direction:column;gap:8px;">
+              <div style="font-size:12.5px;font-weight:700;">2. Restore Backup</div>
+              <div class="flex flex-wrap items-center" style="gap:6px;">
+                <label for="input-restore-file" class="tally-btn tally-btn-primary cursor-pointer">Upload (.json)</label>
+                <input type="file" id="input-restore-file" accept=".json,application/json" class="hidden" />
+                <button type="button" id="btn-restore-paste-toggle" class="tally-btn">Paste Text</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="paste-restore-box" class="hidden" style="padding:8px;border:1px solid #94a3b8;border-radius:4px;background:#ffffff;">
+            <label class="tally-label" for="textarea-restore-json">Backup JSON</label>
+            <textarea id="textarea-restore-json" rows="3" class="tally-input mono" style="margin:4px 0 6px 0;"></textarea>
+            <div class="flex justify-end" style="gap:6px;">
+              <button type="button" id="btn-cancel-paste-restore" class="tally-btn">Cancel</button>
+              <button type="button" id="btn-apply-paste-restore" class="tally-btn tally-btn-primary">Restore</button>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between" style="border-top:1px solid #e2e8f0;padding-top:8px;">
+            <span style="font-size:11px;color:#64748b;">Reset to default 8 invoices?</span>
+            <button type="button" id="btn-reset-demo-data" class="tally-btn tally-btn-danger">Reset Data</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="no-print app-footer">
+    <div class="flex items-center overflow-x-auto no-scrollbar whitespace-nowrap" style="gap:10px;">
+      <span><strong class="mono" style="color:#facc15;">Enter</strong> Next</span>
+      <span><strong class="mono" style="color:#facc15;">Backspace</strong> Back</span>
+      <span><strong class="mono" style="color:#facc15;">Ctrl+S</strong> Save</span>
+      <span><strong class="mono" style="color:#facc15;">F1–F5</strong> Tabs</span>
+    </div>
+    <div id="toast-status" class="mono font-semibold truncate" style="color:#4ade80;">Saved</div>
+  </footer>
+
+  <!-- MODAL -->
+  <div id="app-modal" class="no-print fixed inset-0 z-50 hidden items-center justify-center" style="background:rgba(15,23,42,0.55);padding:16px;">
+    <div style="background:#ffffff;border:1px solid #cbd5e1;border-radius:5px;max-width:380px;width:100%;padding:14px;">
+      <h3 id="modal-title" style="font-size:13.5px;font-weight:700;margin:0 0 6px 0;">Confirm</h3>
+      <p id="modal-message" style="font-size:12px;color:#475569;margin:0 0 12px 0;"></p>
+      <div class="flex items-center justify-end" style="gap:6px;">
+        <button type="button" id="modal-btn-cancel" class="tally-btn">Cancel</button>
+        <button type="button" id="modal-btn-confirm" class="tally-btn tally-btn-danger">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="print-Mount" class="hidden"></div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      const STORAGE_KEY = 'DAWA_TALLY_ERP_V4';
+      const IDB_NAME = 'DawaTallyLocalDB';
+      const IDB_STORE = 'companyState';
+
+      /*__EMBEDDED_STATE_START__*/
+      function getDefaultState() {
+        return {
+          version: 4,
+          company: {
+            name: 'Dawa & Co.',
+            address: 'Land Lord Office, 93/E, Morland Road, Arab Stable, Opp. BEST Quarter, Mumbai - 400008.',
+            gst: '27AAGFD1570N1Z7',
+            pan: '',
+            closingNote: 'We request you to release the aforesaid payment at the earliest.',
+            declaration: 'We declared that this invoice shows the actual price of the Service described and that all particulars are true and correct.'
+          },
+          customers: [
+            {
+              id: 'cust_atlas',
+              name: 'Atlas Copco (India) Ltd.',
+              address: 'Mantri Alpine, Bavdhan,\nPune.',
+              gst: '27AAACA4074D1Z2',
+              pan: '',
+              attn: 'Mr. Anant Murkute',
+              compName: 'Dawa & Co.',
+              compAddress: 'Land Lord Office, 93/E, Morland Road, Arab Stable, Opp. BEST Quarter, Mumbai - 400008.',
+              compGst: '27AAGFD1570N1Z7',
+              compPan: '',
+              dateStyle: 'ordinal',
+              defaultDay: 1,
+              units: [
+                {
+                  unitId: 'unit_atlas_rent',
+                  unitLabel: 'Unit 301 - Rent',
+                  billType: 'Rent',
+                  particularsTemplate: 'Leave & licence fees for Unit No.301 at Mantri Alpine (14599 Sq.ft.) for {MONTH} - {YEAR}.',
+                  baseAmount: 667236,
+                  sacCode: '997212',
+                  cgstRate: 9,
+                  sgstRate: 9,
+                  seqPrefix: 'DAW/2026-27/',
+                  nextSeqNum: 89,
+                  seqPad: 3
+                },
+                {
+                  unitId: 'unit_atlas_maint',
+                  unitLabel: 'Unit 301 - Maint',
+                  billType: 'Maintenance',
+                  particularsTemplate: 'Maintenance Charges for Unit No.301 at Mantri Alpine (14599 Sq.ft. @ 4/- per sq.ft.) for {MONTH} - {YEAR}.',
+                  baseAmount: 61316,
+                  sacCode: '997212',
+                  cgstRate: 9,
+                  sgstRate: 9,
+                  seqPrefix: 'DAW/2026-27/',
+                  nextSeqNum: 90,
+                  seqPad: 3
+                }
+              ]
+            },
+            {
+              id: 'cust_fintech',
+              name: 'TRUST FINTECH LIMITED',
+              address: 'Mantri Alpine, Bavdhan,\nPune.',
+              gst: '27AAAABCT1859L1ZY',
+              pan: 'AABCT1859L',
+              attn: '',
+              compName: 'Dawa & Co.',
+              compAddress: 'Land Lord Office, 93/E, Morland Road, Arab Stable, Opp. BEST Quarter, Mumbai - 400008.',
+              compGst: '27AAGFD1570N1Z7',
+              compPan: 'AAGFD1570N',
+              dateStyle: 'short',
+              defaultDay: 9,
+              units: [
+                {
+                  unitId: 'unit_fintech_301',
+                  unitLabel: 'Unit 301 - Rent',
+                  billType: 'Rent',
+                  particularsTemplate: 'Leave & licence fees for Unit No.301 at Mantri Alpine (2764 Sq.ft.) for {MONTH} - {YEAR}. (Rent of Immovable Property)',
+                  baseAmount: 217665,
+                  sacCode: '997212',
+                  cgstRate: 9,
+                  sgstRate: 9,
+                  seqPrefix: 'FT/2026-27/',
+                  nextSeqNum: 19,
+                  seqPad: 3
+                },
+                {
+                  unitId: 'unit_fintech_dg',
+                  unitLabel: 'DG Charges',
+                  billType: 'DG Bill',
+                  periodFrom: '01-08-2026',
+                  periodTo: '31-10-2026',
+                  particularsTemplate: 'DG Charges\n(Period {PERIOD_FROM} to {PERIOD_TO})\nBill No {INV_NO}',
+                  baseAmount: 5565,
+                  sacCode: '',
+                  cgstRate: 9,
+                  sgstRate: 9,
+                  seqPrefix: 'FT-DG01-09-',
+                  nextSeqNum: 2026,
+                  seqPad: 4
+                }
+              ]
+            },
+            {
+              id: 'cust_shekhar',
+              name: 'SHEKHAR TAILOR PRIVATE LIMITED',
+              address: 'Dawa Arcade,\n1881/A, Sadashiv Peth,\nBajirao Road,\nPune - 411030',
+              gst: '27AAKCC2039A1Z3',
+              pan: '',
+              attn: '',
+              compName: 'Dawa Realty',
+              compAddress: 'Land Lord Office, 93/E, Morland Road, Arab Stable, Opp. BEST Quarter, Mumbai - 400008.',
+              compGst: '27AAKCC2039A1Z3',
+              compPan: 'AAKCC2039A',
+              dateStyle: 'short',
+              defaultDay: 1,
+              units: [
+                {
+                  unitId: 'unit_shekhar_1_2',
+                  unitLabel: 'Unit 1 & 2 (Shop)',
+                  billType: 'Rent',
+                  particularsTemplate: 'Leave & licence fees for {MONTH} - {YEAR} of Unit No. 1 & 2. (Shop) at Dawa Arcade',
+                  baseAmount: 52470,
+                  sacCode: '997212',
+                  cgstRate: 9,
+                  sgstRate: 9,
+                  seqPrefix: 'DAW/2026-27/',
+                  nextSeqNum: 177,
+                  seqPad: 3
+                },
+                {
+                  unitId: 'unit_shekhar_3',
+                  unitLabel: 'Unit 3 (Shop)',
+                  billType: 'Rent',
+                  particularsTemplate: 'Leave & licence fees for {MONTH} - {YEAR} of Unit No. 3. (Shop) at Dawa Arcade',
+                  baseAmount: 349801,
+                  sacCode: '997212',
+                  cgstRate: 9,
+                  sgstRate: 9,
+                  seqPrefix: 'DAW/2026-27/',
+                  nextSeqNum: 178,
+                  seqPad: 3
+                },
+                {
+                  unitId: 'unit_shekhar_4',
+                  unitLabel: 'Unit 4 (Shop)',
+                  billType: 'Rent',
+                  particularsTemplate: 'Leave & licence fees for {MONTH} - {YEAR} of Unit No. 4. (Shop) at Dawa Arcade',
+                  baseAmount: 174900,
+                  sacCode: '997212',
+                  cgstRate: 9,
+                  sgstRate: 9,
+                  seqPrefix: 'DAW/2026-27/',
+                  nextSeqNum: 179,
+                  seqPad: 3
+                },
+                {
+                  unitId: 'unit_shekhar_5',
+                  unitLabel: 'Unit 5 (Shop)',
+                  billType: 'Rent',
+                  particularsTemplate: 'Leave & licence fees for {MONTH} - {YEAR} of Unit No. 5. (Shop) at Dawa Arcade',
+                  baseAmount: 174900,
+                  sacCode: '997212',
+                  cgstRate: 9,
+                  sgstRate: 9,
+                  seqPrefix: 'DAW/2026-27/',
+                  nextSeqNum: 180,
+                  seqPad: 3
+                }
+              ]
+            }
+          ],
+          invoices: [
+            {
+              id: 'inv_nov26_087',
+              customerId: 'cust_atlas',
+              unitId: 'unit_atlas_rent',
+              unitLabel: 'Unit 301 - Rent',
+              billType: 'Rent',
+              billMonth: 'November',
+              billYear: 2026,
+              dateText: '1st November 2026',
+              invoiceNo: 'DAW/2026-27/087',
+              partyName: 'Atlas Copco (India) Ltd.',
+              partyAddress: 'Mantri Alpine, Bavdhan,\nPune.',
+              partyGst: '27AAACA4074D1Z2',
+              partyPan: '',
+              partyAttn: 'Mr. Anant Murkute',
+              sacCode: '997212',
+              particulars: 'Leave & licence fees for Unit No.301 at Mantri Alpine (14599 Sq.ft.) for November - 2026.',
+              baseAmount: 667236,
+              cgstRate: 9,
+              sgstRate: 9,
+              cgstAmt: 60051,
+              sgstAmt: 60051,
+              roundOff: 0,
+              totalAmount: 787338,
+              amountWords: 'seven hundred eighty-seven thousand, three hundred thirty-eight',
+              compName: 'Dawa & Co.',
+              compAddress: 'Land Lord Office, 93/E, Morland Road, Arab Stable, Opp. BEST Quarter, Mumbai - 400008.',
+              compGst: '27AAGFD1570N1Z7',
+              compPan: '',
+              closingNote: 'We request you to release the aforesaid payment at the earliest.'
+            },
+            {
+              id: 'inv_nov26_088',
+              customerId: 'cust_atlas',
+              unitId: 'unit_atlas_maint',
+              unitLabel: 'Unit 301 - Maint',
+              billType: 'Maintenance',
+              billMonth: 'November',
+              billYear: 2026,
+              dateText: '1st November 2026',
+              invoiceNo: 'DAW/2026-27/088',
+              partyName: 'Atlas Copco (India) Ltd.',
+              partyAddress: 'Mantri Alpine, Bavdhan,\nPune.',
+              partyGst: '27AAACA4074D1Z2',
+              partyPan: '',
+              partyAttn: 'Mr. Anant Murkute',
+              sacCode: '997212',
+              particulars: 'Maintenance Charges for Unit No.301 at Mantri Alpine (14599 Sq.ft. @ 4/- per sq.ft.) for November - 2026.',
+              baseAmount: 61316,
+              cgstRate: 9,
+              sgstRate: 9,
+              cgstAmt: 5518,
+              sgstAmt: 5518,
+              roundOff: 0,
+              totalAmount: 72352,
+              amountWords: 'seventy-two thousand three hundred fifty-two',
+              compName: 'Dawa & Co.',
+              compAddress: 'Land Lord Office, 93/E, Morland Road, Arab Stable, Opp. BEST Quarter, Mumbai - 400008.',
+              compGst: '27AAGFD1570N1Z7',
+              compPan: '',
+              closingNote: 'We request you to release the aforesaid payment at the earliest.'
+            },
+            {
+              id: 'inv_nov26_ft018',
+              customerId: 'cust_fintech',
+              unitId: 'unit_fintech_301',
+              unitLabel: 'Unit 301 - Rent',
+              billType: 'Rent',
+              billMonth: 'November',
+              billYear: 2026,
+              dateText: '9-November-26',
+              invoiceNo: 'FT/2026-27/018',
+              partyName: 'TRUST FINTECH LIMITED',
+              partyAddress: 'Mantri Alpine, Bavdhan,\nPune.',
+              partyGst: '27AAAABCT1859L1ZY',
+              partyPan: 'AABCT1859L',
+              partyAttn: '',
+              sacCode: '997212',
+              particulars: 'Leave & licence fees for Unit No.301 at Mantri Alpine (2764 Sq.ft.) for November - 2026. (Rent of Immovable Property)',
+              baseAmount: 217665,
+              cgstRate: 9,
+              sgstRate: 9,
+              cgstAmt: 19590,
+              sgstAmt: 19590,
+              roundOff: 0,
+              totalAmount: 256845,
+              amountWords: 'two hundred fifty-six thousand, eight hundred forty-five',
+              compName: 'Dawa & Co.',
+              compAddress: 'Land Lord Office, 93/E, Morland Road, Arab Stable, Opp. BEST Quarter, Mumbai - 400008.',
+              compGst: '27AAGFD1570N1Z7',
+              compPan: 'AAGFD1570N',
+              closingNote: 'We request you to release the aforesaid payment at the earliest.'
+            },
+            {
+              id: 'inv_sep26_ftdg01',
+              customerId: 'cust_fintech',
+              unitId: 'unit_fintech_dg',
+              unitLabel: 'DG Charges',
+              billType: 'DG Bill',
+              billMonth: 'September',
+              billYear: 2026,
+              periodFrom: '01-08-2026',
+              periodTo: '31-10-2026',
+              dateText: '10-Sep-2026',
+              invoiceNo: 'FT-DG01-09-2026',
+              partyName: 'TRUST FINTECH LIMITED',
+              partyAddress: 'Mantri Alpine, Bavdhan,\nPune.',
+              partyGst: '27AAAABCT1859L1ZY',
+              partyPan: 'AABCT1859L',
+              partyAttn: '',
+              sacCode: '',
+              particulars: 'DG Charges\n(Period 01-08-2026 to 31-10-2026)\nBill No FT-DG01-09-2026',
+              baseAmount: 5565,
+              cgstRate: 9,
+              sgstRate: 9,
+              cgstAmt: 500.85,
+              sgstAmt: 500.85,
+              roundOff: 0.30,
+              totalAmount: 6567,
+              amountWords: 'INR Six Thousand Five Hundred Sixty Seven Only',
+              compName: 'Dawa & Co.',
+              compAddress: 'Land Lord Office, 93/E, Morland Road, Arab Stable, Opp. BEST Quarter, Mumbai - 400008.',
+              compGst: '27AAGFD1570N1Z7',
+              compPan: 'AAGFD1570N',
+              closingNote: 'We request you to release the aforesaid payment at the earliest.'
+            },
+            {
+              id: 'inv_nov26_173',
+              customerId: 'cust_shekhar',
+              unitId: 'unit_shekhar_1_2',
+              unitLabel: 'Unit 1 & 2 (Shop)',
+              billType: 'Rent',
+              billMonth: 'November',
+              billYear: 2026,
+              dateText: '1-November-26',
+              invoiceNo: 'DAW/2026-27/173',
+              partyName: 'SHEKHAR TAILOR PRIVATE LIMITED',
+              partyAddress: 'Dawa Arcade,\n1881/A, Sadashiv Peth,\nBajirao Road,\nPune - 411030',
+              partyGst: '27AAKCC2039A1Z3',
+              partyPan: '',
+              partyAttn: '',
+              sacCode: '997212',
+              particulars: 'Leave & licence fees for November - 2026 of Unit No. 1 & 2. (Shop) at Dawa Arcade',
+              baseAmount: 52470,
+              cgstRate: 9,
+              sgstRate: 9,
+              cgstAmt: 4722,
+              sgstAmt: 4722,
+              roundOff: 0,
+              totalAmount: 61914,
+              amountWords: 'sixty-one thousand nine hundred fourteen.',
+              compName: 'Dawa Realty',
+              compAddress: 'Land Lord Office, 93/E, Morland Road, Arab Stable, Opp. BEST Quarter, Mumbai - 400008.',
+              compGst: '27AAKCC2039A1Z3',
+              compPan: 'AAKCC2039A',
+              closingNote: 'We request you to release the aforesaid payment at the earliest.'
+            },
+            {
+              id: 'inv_nov26_174',
+              customerId: 'cust_shekhar',
+              unitId: 'unit_shekhar_3',
+              unitLabel: 'Unit 3 (Shop)',
+              billType: 'Rent',
+              billMonth: 'November',
+              billYear: 2026,
+              dateText: '1-November-26',
+              invoiceNo: 'DAW/2026-27/174',
+              partyName: 'SHEKHAR TAILOR PRIVATE LIMITED',
+              partyAddress: 'Dawa Arcade,\n1881/A, Sadashiv Peth,\nBajirao Road,\nPune - 411030',
+              partyGst: '27AAKCC2039A1Z3',
+              partyPan: '',
+              partyAttn: '',
+              sacCode: '997212',
+              particulars: 'Leave & licence fees for November - 2026 of Unit No. 3. (Shop) at Dawa Arcade',
+              baseAmount: 349801,
+              cgstRate: 9,
+              sgstRate: 9,
+              cgstAmt: 31482,
+              sgstAmt: 31482,
+              roundOff: 0,
+              totalAmount: 412765,
+              amountWords: 'four hundred twelve thousand, seven hundred sixty-five.',
+              compName: 'Dawa Realty',
+              compAddress: 'Land Lord Office, 93/E, Morland Road, Arab Stable, Opp. BEST Quarter, Mumbai - 400008.',
+              compGst: '27AAKCC2039A1Z3',
+              compPan: 'AAKCC2039A',
+              closingNote: 'We request you to release the aforesaid payment at the earliest.'
+            },
+            {
+              id: 'inv_nov26_175',
+              customerId: 'cust_shekhar',
+              unitId: 'unit_shekhar_4',
+              unitLabel: 'Unit 4 (Shop)',
+              billType: 'Rent',
+              billMonth: 'November',
+              billYear: 2026,
+              dateText: '1-November-26',
+              invoiceNo: 'DAW/2026-27/175',
+              partyName: 'SHEKHAR TAILOR PRIVATE LIMITED',
+              partyAddress: 'Dawa Arcade,\n1881/A, Sadashiv Peth,\nBajirao Road,\nPune - 411030',
+              partyGst: '27AAKCC2039A1Z3',
+              partyPan: '',
+              partyAttn: '',
+              sacCode: '997212',
+              particulars: 'Leave & licence fees for November - 2026 of Unit No. 4. (Shop) at Dawa Arcade',
+              baseAmount: 174900,
+              cgstRate: 9,
+              sgstRate: 9,
+              cgstAmt: 15741,
+              sgstAmt: 15741,
+              roundOff: 0,
+              totalAmount: 206382,
+              amountWords: 'two hundred six thousand, three hundred eighty-two.',
+              compName: 'Dawa Realty',
+              compAddress: 'Land Lord Office, 93/E, Morland Road, Arab Stable, Opp. BEST Quarter, Mumbai - 400008.',
+              compGst: '27AAKCC2039A1Z3',
+              compPan: 'AAKCC2039A',
+              closingNote: 'We request you to release the aforesaid payment at the earliest.'
+            },
+            {
+              id: 'inv_nov26_176',
+              customerId: 'cust_shekhar',
+              unitId: 'unit_shekhar_5',
+              unitLabel: 'Unit 5 (Shop)',
+              billType: 'Rent',
+              billMonth: 'November',
+              billYear: 2026,
+              dateText: '1-November-26',
+              invoiceNo: 'DAW/2026-27/176',
+              partyName: 'SHEKHAR TAILOR PRIVATE LIMITED',
+              partyAddress: 'Dawa Arcade,\n1881/A, Sadashiv Peth,\nBajirao Road,\nPune - 411030',
+              partyGst: '27AAKCC2039A1Z3',
+              partyPan: '',
+              partyAttn: '',
+              sacCode: '997212',
+              particulars: 'Leave & licence fees for November - 2026 of Unit No. 5. (Shop) at Dawa Arcade',
+              baseAmount: 174900,
+              cgstRate: 9,
+              sgstRate: 9,
+              cgstAmt: 15741,
+              sgstAmt: 15741,
+              roundOff: 0,
+              totalAmount: 206382,
+              amountWords: 'two hundred six thousand, three hundred eighty-two.',
+              compName: 'Dawa Realty',
+              compAddress: 'Land Lord Office, 93/E, Morland Road, Arab Stable, Opp. BEST Quarter, Mumbai - 400008.',
+              compGst: '27AAKCC2039A1Z3',
+              compPan: 'AAKCC2039A',
+              closingNote: 'We request you to release the aforesaid payment at the earliest.'
+            }
+          ]
+        };
+      }
+      /*__EMBEDDED_STATE_END__*/
+
+      let state = loadStateSync();
+      let currentTab = 'invoice';
+      let currentInvoiceStep = 'form';
+      let currentParticularsTemplate = 'Leave & licence fees for Unit No.301 at Mantri Alpine (14599 Sq.ft.) for {MONTH} - {YEAR}.';
+      let modalConfirmCallback = null;
+
+      // =========================================================================
+      // MULTI-LAYER PERSISTENCE (localStorage + sessionStorage + IndexedDB + window.name)
+      // =========================================================================
+      function isValidState(obj) {
+        return Boolean(obj && Array.isArray(obj.customers) && Array.isArray(obj.invoices));
+      }
+
+      function loadStateSync() {
+        const keysToTry = [STORAGE_KEY, 'DAWA_TALLY_ERP_V3', 'DAWA_TALLY_ERP_V2'];
+        for (let i = 0; i < keysToTry.length; i++) {
+          try {
+            const raw = localStorage.getItem(keysToTry[i]);
+            if (raw) {
+              const parsed = JSON.parse(raw);
+              if (isValidState(parsed)) return upgradeStateIfNeeded(parsed);
+            }
+          } catch (e) {}
+        }
+        try {
+          const sraw = sessionStorage.getItem(STORAGE_KEY);
+          if (sraw) {
+            const parsed = JSON.parse(sraw);
+            if (isValidState(parsed)) return upgradeStateIfNeeded(parsed);
+          }
+        } catch (e) {}
+        try {
+          if (window.name && window.name.indexOf('DAWA_STATE:') === 0) {
+            const parsed = JSON.parse(window.name.slice('DAWA_STATE:'.length));
+            if (isValidState(parsed)) return upgradeStateIfNeeded(parsed);
+          }
+        } catch (e) {}
+
+        return getDefaultState();
+      }
+
+      // Ensure Fintech DG Bill template is present even if user had an older saved state
+      function upgradeStateIfNeeded(st) {
+        const fintech = (st.customers || []).find(c => c.id === 'cust_fintech');
+        if (fintech && Array.isArray(fintech.units) && !fintech.units.some(u => u.billType === 'DG Bill')) {
+          fintech.units.push({
+            unitId: 'unit_fintech_dg',
+            unitLabel: 'DG Charges',
+            billType: 'DG Bill',
+            periodFrom: '01-08-2026',
+            periodTo: '31-10-2026',
+            particularsTemplate: 'DG Charges\n(Period {PERIOD_FROM} to {PERIOD_TO})\nBill No {INV_NO}',
+            baseAmount: 5565,
+            sacCode: '',
+            cgstRate: 9,
+            sgstRate: 9,
+            seqPrefix: 'FT-DG01-09-',
+            nextSeqNum: 2026,
+            seqPad: 4
+          });
+        }
+        return st;
+      }
+
+      const GH_CONF_KEY = 'DAWA_GH_CLOUD_CONFIG_V1';
+      let ghCloudTimer = null;
+      let ghLastSha = '';
+
+      function loadGhConfig() {
+        try {
+          const raw = localStorage.getItem(GH_CONF_KEY);
+          if (raw) return JSON.parse(raw);
+        } catch (e) {}
+        // Auto-detect repo if hosted on *.github.io/<repo>/
+        let autoRepo = '';
+        try {
+          const host = window.location.hostname || '';
+          const pathParts = (window.location.pathname || '').split('/').filter(Boolean);
+          if (host.endsWith('.github.io') && pathParts.length > 0) {
+            const owner = host.replace('.github.io', '');
+            autoRepo = owner + '/' + pathParts[0];
+          }
+        } catch (e) {}
+        return { repo: autoRepo, token: '' };
+      }
+
+      function saveGhConfig(repo, token) {
+        const cfg = { repo: (repo || '').trim(), token: (token || '').trim() };
+        try { localStorage.setItem(GH_CONF_KEY, JSON.stringify(cfg)); } catch (e) {}
+        return cfg;
+      }
+
+      function setCloudStatusUI(text, color) {
+        const txtEl = document.getElementById('cloud-status-text');
+        const dotEl = document.getElementById('cloud-status-dot');
+        const badgeEl = document.getElementById('gh-sync-badge');
+        if (txtEl) txtEl.textContent = text;
+        if (dotEl) dotEl.style.color = color || '#4ade80';
+        if (badgeEl) {
+          badgeEl.textContent = text;
+          badgeEl.style.color = color || '#15803d';
+        }
+      }
+
+      function encodeUtf8Base64(str) {
+        return btoa(unescape(encodeURIComponent(str)));
+      }
+      function decodeUtf8Base64(b64) {
+        return decodeURIComponent(escape(atob(String(b64 || '').replace(/\s+/g, ''))));
+      }
+
+      async function pullStateFromGitHub(silent) {
+        const cfg = loadGhConfig();
+        if (!cfg.repo || !cfg.token) return false;
+        setCloudStatusUI('Cloud Syncing...', '#facc15');
+        try {
+          const url = 'https://api.github.com/repos/' + cfg.repo + '/contents/dawa_db.json?t=' + Date.now();
+          const res = await fetch(url, {
+            headers: {
+              'Authorization': 'Bearer ' + cfg.token,
+              'Accept': 'application/vnd.github+json'
+            }
+          });
+          if (res.status === 404) {
+            // File doesn't exist in repo yet -> push current state to initialize dawa_db.json!
+            await pushStateToGitHubNow();
+            return true;
+          }
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          const data = await res.json();
+          if (data && data.sha) ghLastSha = data.sha;
+          if (data && data.content) {
+            const decoded = JSON.parse(decodeUtf8Base64(data.content));
+            if (isValidState(decoded)) {
+              const remoteTime = decoded.updatedAt || 0;
+              const localTime = state.updatedAt || 0;
+              if (!silent || remoteTime >= localTime) {
+                state = upgradeStateIfNeeded(decoded);
+                saveState(true, true);
+                populateCustomerDropdowns();
+                restoreDraftOrNewInvoice();
+                renderSalesTable();
+                renderCustomersDirectory();
+              }
+              setCloudStatusUI('Cloud Saved ✓', '#4ade80');
+              if (!silent) showToast('Synced from GitHub Cloud (' + state.invoices.length + ' invoices)');
+              return true;
+            }
+          }
+        } catch (err) {
+          setCloudStatusUI('Local Saved (Cloud Err)', '#fbbf24');
+          if (!silent) showToast('GitHub Sync Error: check Repo & Token', true);
+        }
+        return false;
+      }
+
+      async function pushStateToGitHubNow() {
+        const cfg = loadGhConfig();
+        if (!cfg.repo || !cfg.token) return false;
+        setCloudStatusUI('Saving to Cloud...', '#facc15');
+        try {
+          const apiBase = 'https://api.github.com/repos/' + cfg.repo + '/contents/dawa_db.json';
+          if (!ghLastSha) {
+            const getRes = await fetch(apiBase + '?t=' + Date.now(), {
+              headers: {
+                'Authorization': 'Bearer ' + cfg.token,
+                'Accept': 'application/vnd.github+json'
+              }
+            });
+            if (getRes.ok) {
+              const meta = await getRes.json();
+              if (meta && meta.sha) ghLastSha = meta.sha;
+            }
+          }
+          const bodyObj = {
+            message: 'Auto-sync Dawa Billing DB (' + new Date().toISOString() + ')',
+            content: encodeUtf8Base64(JSON.stringify(state, null, 2))
+          };
+          if (ghLastSha) bodyObj.sha = ghLastSha;
+
+          const putRes = await fetch(apiBase, {
+            method: 'PUT',
+            headers: {
+              'Authorization': 'Bearer ' + cfg.token,
+              'Accept': 'application/vnd.github+json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(bodyObj)
+          });
+          if (!putRes.ok) {
+            // If SHA conflict, clear ghLastSha and retry once
+            ghLastSha = '';
+            throw new Error('PUT ' + putRes.status);
+          }
+          const putData = await putRes.json();
+          if (putData && putData.content && putData.content.sha) {
+            ghLastSha = putData.content.sha;
+          }
+          setCloudStatusUI('Cloud Saved ✓', '#4ade80');
+          return true;
+        } catch (err) {
+          setCloudStatusUI('Local Saved ✓', '#4ade80');
+          return false;
+        }
+      }
+
+      function scheduleGitHubCloudPush() {
+        const cfg = loadGhConfig();
+        if (!cfg.repo || !cfg.token) return;
+        if (ghCloudTimer) clearTimeout(ghCloudTimer);
+        ghCloudTimer = setTimeout(() => {
+          pushStateToGitHubNow();
+        }, 650);
+      }
+
+      function initIndexedDBAndHydrate() {
+        try {
+          if (!window.indexedDB) return;
+          const req = window.indexedDB.open(IDB_NAME, 1);
+          req.onupgradeneeded = function (evt) {
+            const db = evt.target.result;
+            if (!db.objectStoreNames.contains(IDB_STORE)) {
+              db.createObjectStore(IDB_STORE);
+            }
+          };
+          req.onsuccess = function (evt) {
+            const db = evt.target.result;
+            const tx = db.transaction(IDB_STORE, 'readonly');
+            const store = tx.objectStore(IDB_STORE);
+            const getReq = store.get('latest');
+            getReq.onsuccess = function () {
+              if (getReq.result && isValidState(getReq.result)) {
+                const idbTime = getReq.result.updatedAt || 0;
+                const curTime = state.updatedAt || 0;
+                // Hydrate from IndexedDB whenever IndexedDB has saved data and sync state was fresh default (curTime === 0) or older
+                if (curTime === 0 || idbTime >= curTime) {
+                  state = upgradeStateIfNeeded(getReq.result);
+                  saveState(true, true);
+                  populateCustomerDropdowns();
+                  restoreDraftOrNewInvoice();
+                  renderSalesTable();
+                  renderCustomersDirectory();
+                }
+              } else {
+                // IndexedDB is empty -> write initial state to IndexedDB without clobbering updatedAt
+                const writeTx = db.transaction(IDB_STORE, 'readwrite');
+                writeTx.objectStore(IDB_STORE).put(state, 'latest');
+              }
+            };
+          };
+        } catch (e) {}
+      }
+
+      function saveState(skipIdb, skipCloud) {
+        state.updatedAt = Date.now();
+        const serialized = JSON.stringify(state);
+        try { localStorage.setItem(STORAGE_KEY, serialized); } catch (e) {}
+        try { sessionStorage.setItem(STORAGE_KEY, serialized); } catch (e) {}
+        try { window.name = 'DAWA_STATE:' + serialized; } catch (e) {}
+
+        if (!skipIdb) {
+          try {
+            if (window.indexedDB) {
+              const req = window.indexedDB.open(IDB_NAME, 1);
+              req.onupgradeneeded = function (evt) {
+                const db = evt.target.result;
+                if (!db.objectStoreNames.contains(IDB_STORE)) {
+                  db.createObjectStore(IDB_STORE);
+                }
+              };
+              req.onsuccess = function (evt) {
+                const db = evt.target.result;
+                const tx = db.transaction(IDB_STORE, 'readwrite');
+                tx.objectStore(IDB_STORE).put(state, 'latest');
+              };
+            }
+          } catch (e) {}
+        }
+
+        if (!skipCloud) {
+          scheduleGitHubCloudPush();
+        }
+        updateHeaderAndStats();
+      }
+
+      // Live Draft Auto-Save: saves the active form inputs on every change so reopening restores exact work-in-progress
+      function saveActiveFormDraft() {
+        try {
+          state.activeDraft = {
+            customerId: document.getElementById('inv-customer-select').value,
+            unitId: document.getElementById('inv-unit-select').value,
+            billMonth: document.getElementById('inv-bill-month').value,
+            billYear: document.getElementById('inv-bill-year').value,
+            dateText: document.getElementById('inv-date-text').value,
+            invoiceNo: document.getElementById('inv-number').value,
+            billType: document.getElementById('inv-bill-type').value,
+            periodFrom: document.getElementById('inv-period-from').value,
+            periodTo: document.getElementById('inv-period-to').value,
+            particulars: document.getElementById('inv-particulars').value,
+            baseAmount: document.getElementById('inv-base-amount').value
+          };
+          saveState(false, false);
+          showToast('Auto-Saved ✓');
+        } catch (e) {}
+      }
+
+      function restoreDraftOrNewInvoice() {
+        if (state.activeDraft && state.activeDraft.customerId) {
+          const d = state.activeDraft;
+          populateCustomerDropdowns();
+          if (state.customers.some(c => c.id === d.customerId)) {
+            document.getElementById('inv-customer-select').value = d.customerId;
+            populateUnitDropdownForCustomer(d.customerId, d.unitId);
+            applySelectedCustomerAndUnit(true);
+            if (d.billMonth) document.getElementById('inv-bill-month').value = d.billMonth;
+            if (d.billYear) document.getElementById('inv-bill-year').value = d.billYear;
+            if (d.dateText) document.getElementById('inv-date-text').value = d.dateText;
+            if (d.invoiceNo) document.getElementById('inv-number').value = d.invoiceNo;
+            if (d.billType) document.getElementById('inv-bill-type').value = d.billType;
+            if (d.periodFrom) document.getElementById('inv-period-from').value = d.periodFrom;
+            if (d.periodTo) document.getElementById('inv-period-to').value = d.periodTo;
+            if (d.particulars) document.getElementById('inv-particulars').value = d.particulars;
+            if (d.baseAmount != null && d.baseAmount !== '') document.getElementById('inv-base-amount').value = d.baseAmount;
+            recalculateTaxesAndTotal(true);
+            updateLiveInvoicePreview();
+            return;
+          }
+        }
+        startNewInvoice();
+      }
+
+      function downloadStandaloneOfflineApp() {
+        saveState();
+        const docHtml = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+        const replacementFn = '/*__EMBEDDED_STATE_START__*/\n      function getDefaultState() {\n        return ' + JSON.stringify(state, null, 2) + ';\n      }\n      /*__EMBEDDED_STATE_END__*/';
+        const updatedHtml = docHtml.replace(/\/\*__EMBEDDED_STATE_START__\*\/[\s\S]*?\/\*__EMBEDDED_STATE_END__\*\//, replacementFn);
+
+        const blob = new Blob([updatedHtml], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'Dawa_Billing_App.html';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 1500);
+        showToast('Saved Offline App (.html)');
+      }
+
+      function showToast(msg, isError) {
+        const el = document.getElementById('toast-status');
+        if (!el) return;
+        el.textContent = msg;
+        el.style.color = isError ? '#fb7185' : '#4ade80';
+      }
+
+      // ==========================================
+      // NUMBER TO WORDS & FORMATTING
+      // ==========================================
+      function numberToWords(num, isDGStyle) {
+        const n = Math.round(Number(num) || 0);
+        if (n === 0) return 'zero';
+        if (n < 0) return 'minus ' + numberToWords(Math.abs(n), false);
+
+        const ones = [
+          '', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine',
+          'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen',
+          'seventeen', 'eighteen', 'nineteen'
+        ];
+        const tens = [
+          '', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'
+        ];
+
+        function convertUnder100(val) {
+          if (val < 20) return ones[val];
+          const t = Math.floor(val / 10);
+          const o = val % 10;
+          return tens[t] + (o ? (isDGStyle ? ' ' : '-') + ones[o] : '');
+        }
+
+        function convertUnder1000(val) {
+          const h = Math.floor(val / 100);
+          const rem = val % 100;
+          let res = '';
+          if (h > 0) {
+            res += ones[h] + ' hundred';
+            if (rem > 0) res += ' ';
+          }
+          if (rem > 0) {
+            res += convertUnder100(rem);
+          }
+          return res;
+        }
+
+        const scales = ['', 'thousand', 'million', 'billion'];
+        const chunks = [];
+        let temp = n;
+        while (temp > 0) {
+          chunks.push(temp % 1000);
+          temp = Math.floor(temp / 1000);
+        }
+
+        const parts = [];
+        for (let i = chunks.length - 1; i >= 0; i--) {
+          if (chunks[i] === 0) continue;
+          const words = convertUnder1000(chunks[i]);
+          const scale = scales[i];
+          parts.push(scale ? words + ' ' + scale : words);
+        }
+        if (isDGStyle) {
+          const raw = parts.join(' ');
+          const titled = raw.replace(/\b\w/g, c => c.toUpperCase());
+          return 'INR ' + titled + ' Only';
+        }
+        return parts.join(', ');
+      }
+
+      function formatCustomerDate(day, monthName, year, style, isDG) {
+        const d = parseInt(day, 10) || 1;
+        const y = parseInt(year, 10) || 2026;
+        if (isDG) {
+          return '10-' + monthName.slice(0, 3) + '-' + y;
+        }
+        if (style === 'short') {
+          return d + '-' + monthName + '-' + String(y).slice(-2);
+        }
+        const j = d % 10, k = d % 100;
+        let suffix = 'th';
+        if (j === 1 && k !== 11) suffix = 'st';
+        else if (j === 2 && k !== 12) suffix = 'nd';
+        else if (j === 3 && k !== 13) suffix = 'rd';
+        return d + suffix + ' ' + monthName + ' ' + y;
+      }
+
+      function formatSequenceNumber(prefix, num, pad) {
+        const n = parseInt(num, 10) || 1;
+        const p = parseInt(pad, 10) || 3;
+        return (prefix || '') + String(n).padStart(p, '0');
+      }
+
+      function formatAmountDisplay(val, hasDecimals) {
+        const n = Number(val) || 0;
+        if (hasDecimals) {
+          return n.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+        return Math.round(n).toLocaleString('en-IN');
+      }
+
+      // =========================================================================
+      // STEP SWITCHING IN TAB 1
+      // =========================================================================
+      function showInvoiceStep(step) {
+        currentInvoiceStep = step;
+        const formPane = document.getElementById('inv-form-pane');
+        const previewPane = document.getElementById('inv-preview-pane');
+
+        if (step === 'preview') {
+          formPane.classList.add('hidden');
+          previewPane.classList.remove('hidden');
+          previewPane.classList.add('flex');
+          updateLiveInvoicePreview();
+          setTimeout(scaleInvoicePaper, 20);
+          setTimeout(() => {
+            const pdfBtn = document.getElementById('btn-inv-pdf');
+            if (pdfBtn) pdfBtn.focus();
+          }, 30);
+        } else {
+          previewPane.classList.add('hidden');
+          previewPane.classList.remove('flex');
+          formPane.classList.remove('hidden');
+          setTimeout(() => {
+            const first = document.getElementById('inv-customer-select');
+            if (first) first.focus();
+          }, 30);
+        }
+      }
+
+      function switchTab(tabName) {
+        currentTab = tabName;
+        const tabs = ['invoice', 'sales', 'customers', 'sequence', 'backup'];
+        tabs.forEach(t => {
+          const sec = document.getElementById('view-' + t);
+          const btn = document.getElementById('nav-tab-' + t);
+          if (sec) sec.classList.toggle('hidden', t !== tabName);
+          if (btn) btn.classList.toggle('tab-btn-active', t === tabName);
+        });
+
+        if (tabName === 'invoice') {
+          if (currentInvoiceStep === 'preview') {
+            scaleInvoicePaper();
+          } else {
+            setTimeout(() => {
+              const first = document.getElementById('inv-customer-select');
+              if (first) first.focus();
+            }, 25);
+          }
+        } else if (tabName === 'sales') {
+          renderSalesTable();
+          setTimeout(() => {
+            const flt = document.getElementById('flt-customer');
+            if (flt) flt.focus();
+          }, 25);
+        } else if (tabName === 'customers') {
+          renderCustomersDirectory();
+        } else if (tabName === 'sequence') {
+          renderSequenceTable();
+        } else if (tabName === 'backup') {
+          updateHeaderAndStats();
+        }
+      }
+
+      function scaleInvoicePaper() {
+        const wrapper = document.getElementById('invoice-scale-wrapper');
+        const paper = document.getElementById('invoice-render-target');
+        const sizer = document.getElementById('invoice-scale-sizer');
+        if (!wrapper || !paper || !sizer) return;
+        const availW = wrapper.clientWidth - 16;
+        const availH = wrapper.clientHeight - 16;
+        if (availW <= 0 || availH <= 0) return;
+
+        const naturalW = 780;
+        const naturalH = paper.offsetHeight || 980;
+        const scaleW = availW / naturalW;
+        const scaleH = availH / naturalH;
+        const scale = Math.min(scaleW, scaleH, 1);
+        const clamped = Math.max(0.34, scale);
+
+        paper.style.transformOrigin = 'top left';
+        paper.style.transform = 'scale(' + clamped.toFixed(4) + ')';
+        sizer.style.width = Math.round(naturalW * clamped) + 'px';
+        sizer.style.height = Math.round(naturalH * clamped) + 'px';
+      }
+
+      window.addEventListener('resize', scaleInvoicePaper);
+
+      // ==========================================
+      // INVOICE FORM LOGIC & SYNC
+      // ==========================================
+      function populateCustomerDropdowns() {
+        const invCustSel = document.getElementById('inv-customer-select');
+        const fltCustSel = document.getElementById('flt-customer');
+        const prevInvCust = invCustSel.value;
+        const prevFltCust = fltCustSel.value;
+
+        invCustSel.innerHTML = '';
+        state.customers.forEach(c => {
+          const opt = document.createElement('option');
+          opt.value = c.id;
+          opt.textContent = c.name;
+          invCustSel.appendChild(opt);
+        });
+
+        fltCustSel.innerHTML = '<option value="ALL">All (' + state.customers.length + ')</option>';
+        state.customers.forEach(c => {
+          const opt = document.createElement('option');
+          opt.value = c.id;
+          opt.textContent = c.name;
+          fltCustSel.appendChild(opt);
+        });
+
+        if (prevInvCust && state.customers.some(c => c.id === prevInvCust)) {
+          invCustSel.value = prevInvCust;
+        } else if (state.customers.length > 0) {
+          invCustSel.value = state.customers[0].id;
+        }
+
+        if (prevFltCust && (prevFltCust === 'ALL' || state.customers.some(c => c.id === prevFltCust))) {
+          fltCustSel.value = prevFltCust;
+        }
+      }
+
+      function populateUnitDropdownForCustomer(custId, preferredUnitId) {
+        const unitSel = document.getElementById('inv-unit-select');
+        unitSel.innerHTML = '';
+        const cust = state.customers.find(c => c.id === custId);
+        if (!cust || !Array.isArray(cust.units) || cust.units.length === 0) {
+          const opt = document.createElement('option');
+          opt.value = 'custom';
+          opt.textContent = 'Custom Bill';
+          unitSel.appendChild(opt);
+          return;
+        }
+        cust.units.forEach(u => {
+          const opt = document.createElement('option');
+          opt.value = u.unitId;
+          opt.textContent = u.unitLabel + ' (' + u.billType + ' - Rs. ' + (Number(u.baseAmount) || 0).toLocaleString('en-IN') + ')';
+          unitSel.appendChild(opt);
+        });
+        if (preferredUnitId && cust.units.some(u => u.unitId === preferredUnitId)) {
+          unitSel.value = preferredUnitId;
+        } else {
+          unitSel.value = cust.units[0].unitId;
+        }
+      }
+
+      function applySelectedCustomerAndUnit(preserveInvoiceNo) {
+        const custId = document.getElementById('inv-customer-select').value;
+        const unitId = document.getElementById('inv-unit-select').value;
+        const cust = state.customers.find(c => c.id === custId);
+        if (!cust) return;
+
+        document.getElementById('inv-comp-name').value = cust.compName || state.company.name || 'Dawa & Co.';
+        document.getElementById('inv-comp-address').value = cust.compAddress || state.company.address;
+        document.getElementById('inv-comp-gst').value = cust.compGst || state.company.gst;
+        document.getElementById('inv-comp-pan').value = cust.compPan || '';
+        document.getElementById('inv-closing-note').value = state.company.closingNote || 'We request you to release the aforesaid payment at the earliest.';
+
+        document.getElementById('inv-party-name').value = cust.name || '';
+        document.getElementById('inv-party-gst').value = cust.gst || '';
+        document.getElementById('inv-party-pan').value = cust.pan || '';
+        document.getElementById('inv-party-address').value = cust.address || '';
+        document.getElementById('inv-party-attn').value = cust.attn || '';
+
+        const pill = document.getElementById('summary-party-pill');
+        if (pill) {
+          pill.textContent = (cust.compName || 'Dawa & Co.') + ' → ' + cust.name;
+        }
+
+        const unit = (cust.units || []).find(u => u.unitId === unitId) || (cust.units || [])[0];
+        const isDG = Boolean(unit && (unit.billType === 'DG Bill' || unit.periodFrom || (unit.particularsTemplate || '').includes('{PERIOD_FROM}')));
+
+        // Show Period box automatically if DG Bill / Period template
+        const periodBox = document.getElementById('period-fields-box');
+        if (isDG) {
+          periodBox.classList.remove('hidden');
+        } else {
+          periodBox.classList.add('hidden');
+        }
+
+        const month = document.getElementById('inv-bill-month').value;
+        const year = document.getElementById('inv-bill-year').value;
+        document.getElementById('inv-date-text').value = formatCustomerDate(
+          cust.defaultDay || 1,
+          month,
+          year,
+          cust.dateStyle || 'ordinal',
+          isDG
+        );
+
+        if (unit) {
+          document.getElementById('inv-bill-type').value = unit.billType || 'Rent';
+          document.getElementById('inv-period-from').value = unit.periodFrom || '';
+          document.getElementById('inv-period-to').value = unit.periodTo || '';
+          document.getElementById('inv-sac-code').value = unit.sacCode != null ? unit.sacCode : '997212';
+          document.getElementById('inv-base-amount').value = unit.baseAmount != null ? unit.baseAmount : 0;
+          document.getElementById('inv-cgst-rate').value = unit.cgstRate != null ? unit.cgstRate : 9;
+          document.getElementById('inv-sgst-rate').value = unit.sgstRate != null ? unit.sgstRate : 9;
+          currentParticularsTemplate = unit.particularsTemplate || 'Leave & licence fees for {MONTH} - {YEAR}.';
+
+          if (!preserveInvoiceNo && !document.getElementById('inv-id').value) {
+            document.getElementById('inv-number').value = formatSequenceNumber(
+              unit.seqPrefix || 'DAW/2026-27/',
+              unit.nextSeqNum || 1,
+              unit.seqPad || 3
+            );
+          }
+
+          syncParticularsMonthYear(true);
+        }
+
+        recalculateTaxesAndTotal(true);
+        updateLiveInvoicePreview();
+      }
+
+      function syncParticularsMonthYear(resetToUnitTemplate) {
+        const month = document.getElementById('inv-bill-month').value;
+        const year = document.getElementById('inv-bill-year').value;
+        const pFrom = (document.getElementById('inv-period-from').value || '').trim();
+        const pTo = (document.getElementById('inv-period-to').value || '').trim();
+        const invNo = (document.getElementById('inv-number').value || '').trim();
+        const partInput = document.getElementById('inv-particulars');
+
+        if (resetToUnitTemplate && currentParticularsTemplate) {
+          let txt = currentParticularsTemplate
+            .replace(/\{MONTH\}/g, month)
+            .replace(/\{YEAR\}/g, year)
+            .replace(/\{PERIOD_FROM\}/g, pFrom || '01-08-2026')
+            .replace(/\{PERIOD_TO\}/g, pTo || '31-10-2026')
+            .replace(/\{INV_NO\}/g, invNo);
+          partInput.value = txt;
+          return;
+        }
+
+        let currentText = partInput.value || '';
+        const monthPattern = /\b(January|February|March|April|May|June|July|August|September|October|November|December)\s*-\s*\d{4}\b/gi;
+        if (monthPattern.test(currentText)) {
+          currentText = currentText.replace(monthPattern, month + ' - ' + year);
+        }
+        if (pFrom && pTo && /\(Period\s+[^)]+\)/i.test(currentText)) {
+          currentText = currentText.replace(/\(Period\s+[^)]+\)/i, '(Period ' + pFrom + ' to ' + pTo + ')');
+        }
+        if (invNo && /Bill No\s+\S+/i.test(currentText)) {
+          currentText = currentText.replace(/Bill No\s+\S+/i, 'Bill No ' + invNo);
+        }
+        partInput.value = currentText;
+      }
+
+      function recalculateTaxesAndTotal(recalcTaxFromRate) {
+        const base = Number(document.getElementById('inv-base-amount').value) || 0;
+        const cgstRate = Number(document.getElementById('inv-cgst-rate').value) || 0;
+        const sgstRate = Number(document.getElementById('inv-sgst-rate').value) || 0;
+        const bType = (document.getElementById('inv-bill-type').value || '').trim();
+        const isDG = bType === 'DG Bill' || (base % 1 !== 0);
+
+        let cgstAmt = Number(document.getElementById('inv-cgst-amt').value) || 0;
+        let sgstAmt = Number(document.getElementById('inv-sgst-amt').value) || 0;
+        let roundOff = Number(document.getElementById('inv-round-off').value) || 0;
+
+        if (recalcTaxFromRate) {
+          const rawCgst = (base * cgstRate) / 100;
+          const rawSgst = (base * sgstRate) / 100;
+          // If DG Bill or decimal tax (e.g. 5565 * 9% = 500.85), preserve 2 decimals and auto-calculate Round Off!
+          const hasDecTax = isDG;
+          if (hasDecTax) {
+            cgstAmt = Math.round(rawCgst * 100) / 100;
+            sgstAmt = Math.round(rawSgst * 100) / 100;
+            const exactSum = base + cgstAmt + sgstAmt;
+            const roundedTotal = Math.round(exactSum);
+            roundOff = Math.round((roundedTotal - exactSum) * 100) / 100;
+          } else {
+            cgstAmt = Math.round(rawCgst);
+            sgstAmt = Math.round(rawSgst);
+            roundOff = 0;
+          }
+          document.getElementById('inv-cgst-amt').value = cgstAmt;
+          document.getElementById('inv-sgst-amt').value = sgstAmt;
+          document.getElementById('inv-round-off').value = roundOff;
+        }
+
+        const total = Math.round(base + cgstAmt + sgstAmt + roundOff);
+        document.getElementById('inv-total-amount').value = total;
+        document.getElementById('inv-words').value = numberToWords(total, bType === 'DG Bill');
+
+        // Update live summary labels in the minimalist form
+        const showDec = (cgstAmt % 1 !== 0) || (roundOff !== 0) || bType === 'DG Bill';
+        document.getElementById('lbl-cgst-rate').textContent = String(cgstRate);
+        document.getElementById('lbl-sgst-rate').textContent = String(sgstRate);
+        document.getElementById('lbl-cgst-amt').textContent = formatAmountDisplay(cgstAmt, showDec);
+        document.getElementById('lbl-sgst-amt').textContent = formatAmountDisplay(sgstAmt, showDec);
+        const roundWrap = document.getElementById('lbl-round-wrap');
+        if (roundOff !== 0) {
+          roundWrap.classList.remove('hidden');
+          document.getElementById('lbl-round-amt').textContent = roundOff.toFixed(2);
+        } else {
+          roundWrap.classList.add('hidden');
+        }
+        document.getElementById('lbl-total-amt').textContent = formatAmountDisplay(total, showDec);
+      }
+
+      function updateLiveInvoicePreview() {
+        const compName = document.getElementById('inv-comp-name').value || 'Dawa & Co.';
+        const compAddr = document.getElementById('inv-comp-address').value || '';
+        const compGst = document.getElementById('inv-comp-gst').value || '';
+        const compPan = (document.getElementById('inv-comp-pan').value || '').trim();
+        const closingNote = document.getElementById('inv-closing-note').value || '';
+        const invNo = document.getElementById('inv-number').value || '';
+        const bType = document.getElementById('inv-bill-type').value || 'Rent';
+
+        const base = Number(document.getElementById('inv-base-amount').value) || 0;
+        const cgstAmt = Number(document.getElementById('inv-cgst-amt').value) || 0;
+        const sgstAmt = Number(document.getElementById('inv-sgst-amt').value) || 0;
+        const roundOff = Number(document.getElementById('inv-round-off').value) || 0;
+        const total = Number(document.getElementById('inv-total-amount').value) || 0;
+        const isDecimalStyle = (roundOff !== 0) || (cgstAmt % 1 !== 0) || bType === 'DG Bill';
+
+        document.getElementById('preview-bar-title').textContent = invNo + ' — ' + (document.getElementById('inv-party-name').value || '');
+        document.getElementById('pv-comp-name').textContent = compName;
+        document.getElementById('pv-comp-address').textContent = compAddr;
+        document.getElementById('pv-comp-gst').textContent = compGst;
+        document.getElementById('pv-comp-pan').textContent = compPan;
+        document.getElementById('pv-sign-comp').textContent = compName;
+
+        document.getElementById('pv-date').textContent = document.getElementById('inv-date-text').value;
+        document.getElementById('pv-inv-no').textContent = invNo;
+
+        const partyPan = (document.getElementById('inv-party-pan').value || '').trim();
+        const partyAttn = (document.getElementById('inv-party-attn').value || '').trim();
+
+        document.getElementById('pv-party-name').textContent = document.getElementById('inv-party-name').value;
+        document.getElementById('pv-party-address').textContent = document.getElementById('inv-party-address').value;
+        document.getElementById('pv-party-gst').textContent = document.getElementById('inv-party-gst').value;
+        document.getElementById('pv-party-pan').textContent = partyPan;
+        document.getElementById('pv-party-attn').textContent = partyAttn;
+
+        document.getElementById('row-comp-pan').style.display = compPan ? 'grid' : 'none';
+        document.getElementById('row-party-pan').style.display = partyPan ? 'grid' : 'none';
+        document.getElementById('pv-attn-row').style.display = partyAttn ? 'grid' : 'none';
+
+        document.getElementById('pv-particulars').textContent = document.getElementById('inv-particulars').value;
+        document.getElementById('pv-base-amt').textContent = isDecimalStyle ? formatAmountDisplay(base, true) : String(Math.round(base));
+
+        const sacVal = (document.getElementById('inv-sac-code').value || '').trim();
+        document.getElementById('pv-sac-display').textContent = sacVal ? ('(Service Accounting Code : ' + sacVal + ')') : '';
+        document.getElementById('pv-cgst-rate').textContent = document.getElementById('inv-cgst-rate').value || '0';
+        document.getElementById('pv-sgst-rate').textContent = document.getElementById('inv-sgst-rate').value || '0';
+        document.getElementById('pv-cgst-amt').textContent = isDecimalStyle ? formatAmountDisplay(cgstAmt, true) : String(Math.round(cgstAmt));
+        document.getElementById('pv-sgst-amt').textContent = isDecimalStyle ? formatAmountDisplay(sgstAmt, true) : String(Math.round(sgstAmt));
+
+        const rowRound = document.getElementById('pv-row-round');
+        const totalSn = document.getElementById('pv-total-sn');
+        if (roundOff !== 0) {
+          rowRound.classList.remove('hidden');
+          document.getElementById('pv-round-amt').textContent = roundOff.toFixed(2);
+          totalSn.textContent = '5';
+        } else {
+          rowRound.classList.add('hidden');
+          totalSn.textContent = '4';
+        }
+
+        document.getElementById('pv-total-amt').textContent = isDecimalStyle ? ('Rs. ' + formatAmountDisplay(total, true)) : String(Math.round(total));
+        document.getElementById('pv-words').textContent = document.getElementById('inv-words').value || 'zero';
+        document.getElementById('pv-closing-note').textContent = closingNote;
+      }
+
+      function loadInvoiceIntoForm(inv, showPreviewDirectly) {
+        if (!inv) return;
+        document.getElementById('inv-id').value = inv.id;
+
+        populateCustomerDropdowns();
+        if (inv.customerId && state.customers.some(c => c.id === inv.customerId)) {
+          document.getElementById('inv-customer-select').value = inv.customerId;
+          populateUnitDropdownForCustomer(inv.customerId, inv.unitId);
+        }
+
+        const cust = state.customers.find(c => c.id === inv.customerId);
+        const unit = cust && (cust.units || []).find(u => u.unitId === inv.unitId);
+        currentParticularsTemplate = unit
+          ? unit.particularsTemplate
+          : 'Leave & licence fees for {MONTH} - {YEAR}.';
+
+        document.getElementById('inv-bill-month').value = inv.billMonth || 'November';
+        document.getElementById('inv-bill-year').value = inv.billYear || 2026;
+        document.getElementById('inv-bill-type').value = inv.billType || 'Rent';
+        document.getElementById('inv-period-from').value = inv.periodFrom || '';
+        document.getElementById('inv-period-to').value = inv.periodTo || '';
+
+        const periodBox = document.getElementById('period-fields-box');
+        if (inv.billType === 'DG Bill' || inv.periodFrom || inv.periodTo) {
+          periodBox.classList.remove('hidden');
+        } else {
+          periodBox.classList.add('hidden');
+        }
+
+        document.getElementById('inv-date-text').value = inv.dateText || '1st November 2026';
+        document.getElementById('inv-number').value = inv.invoiceNo || '';
+        document.getElementById('inv-party-name').value = inv.partyName || '';
+        document.getElementById('inv-party-gst').value = inv.partyGst || '';
+        document.getElementById('inv-party-pan').value = inv.partyPan || '';
+        document.getElementById('inv-party-address').value = inv.partyAddress || '';
+        document.getElementById('inv-party-attn').value = inv.partyAttn || '';
+        document.getElementById('inv-sac-code').value = inv.sacCode != null ? inv.sacCode : '997212';
+        document.getElementById('inv-particulars').value = inv.particulars || '';
+        document.getElementById('inv-base-amount').value = inv.baseAmount != null ? inv.baseAmount : 0;
+        document.getElementById('inv-cgst-rate').value = inv.cgstRate != null ? inv.cgstRate : 9;
+        document.getElementById('inv-sgst-rate').value = inv.sgstRate != null ? inv.sgstRate : 9;
+        document.getElementById('inv-cgst-amt').value = inv.cgstAmt != null ? inv.cgstAmt : 0;
+        document.getElementById('inv-sgst-amt').value = inv.sgstAmt != null ? inv.sgstAmt : 0;
+        document.getElementById('inv-round-off').value = inv.roundOff != null ? inv.roundOff : 0;
+        document.getElementById('inv-total-amount').value = inv.totalAmount != null ? inv.totalAmount : 0;
+        document.getElementById('inv-words').value = inv.amountWords || numberToWords(inv.totalAmount || 0, inv.billType === 'DG Bill');
+
+        document.getElementById('inv-comp-name').value = inv.compName || 'Dawa & Co.';
+        document.getElementById('inv-comp-address').value = inv.compAddress || state.company.address;
+        document.getElementById('inv-comp-gst').value = inv.compGst || '27AAGFD1570N1Z7';
+        document.getElementById('inv-comp-pan').value = inv.compPan || '';
+        document.getElementById('inv-closing-note').value = inv.closingNote || state.company.closingNote;
+
+        const badge = document.getElementById('inv-mode-badge');
+        badge.textContent = 'EDIT';
+        badge.style.background = '#fef08a';
+        badge.style.color = '#713f12';
+
+        document.getElementById('btn-open-last-preview').classList.remove('hidden');
+        recalculateTaxesAndTotal(false);
+        updateLiveInvoicePreview();
+        showInvoiceStep(showPreviewDirectly ? 'preview' : 'form');
+      }
+
+      function startNewInvoice() {
+        document.getElementById('inv-id').value = '';
+        populateCustomerDropdowns();
+        const custId = document.getElementById('inv-customer-select').value;
+        populateUnitDropdownForCustomer(custId);
+
+        document.getElementById('inv-bill-month').value = 'November';
+        document.getElementById('inv-bill-year').value = 2026;
+        document.getElementById('inv-auto-particulars').checked = true;
+
+        const badge = document.getElementById('inv-mode-badge');
+        badge.textContent = 'NEW';
+        badge.style.background = '#dcfce7';
+        badge.style.color = '#14532d';
+
+        applySelectedCustomerAndUnit(false);
+        showInvoiceStep('form');
+        showToast('Ready');
+      }
+
+      function getCurrentInvoiceDataFromForm() {
+        const existingId = document.getElementById('inv-id').value;
+        const custId = document.getElementById('inv-customer-select').value;
+        const unitId = document.getElementById('inv-unit-select').value;
+        const cust = state.customers.find(c => c.id === custId);
+        const unit = cust && (cust.units || []).find(u => u.unitId === unitId);
+
+        return {
+          id: existingId || ('inv_' + Date.now()),
+          customerId: custId,
+          unitId: unitId,
+          unitLabel: unit ? unit.unitLabel : (document.getElementById('inv-bill-type').value || 'Bill'),
+          billType: (document.getElementById('inv-bill-type').value || 'Rent').trim(),
+          billMonth: document.getElementById('inv-bill-month').value || 'November',
+          billYear: parseInt(document.getElementById('inv-bill-year').value, 10) || 2026,
+          periodFrom: (document.getElementById('inv-period-from').value || '').trim(),
+          periodTo: (document.getElementById('inv-period-to').value || '').trim(),
+          dateText: (document.getElementById('inv-date-text').value || '').trim() || '1st November 2026',
+          invoiceNo: (document.getElementById('inv-number').value || '').trim() || 'DAW/2026-27/001',
+          partyName: (document.getElementById('inv-party-name').value || '').trim(),
+          partyAddress: document.getElementById('inv-party-address').value || '',
+          partyGst: (document.getElementById('inv-party-gst').value || '').trim(),
+          partyPan: (document.getElementById('inv-party-pan').value || '').trim(),
+          partyAttn: (document.getElementById('inv-party-attn').value || '').trim(),
+          sacCode: (document.getElementById('inv-sac-code').value || '').trim(),
+          particulars: (document.getElementById('inv-particulars').value || '').trim(),
+          baseAmount: Number(document.getElementById('inv-base-amount').value) || 0,
+          cgstRate: Number(document.getElementById('inv-cgst-rate').value) || 0,
+          sgstRate: Number(document.getElementById('inv-sgst-rate').value) || 0,
+          cgstAmt: Number(document.getElementById('inv-cgst-amt').value) || 0,
+          sgstAmt: Number(document.getElementById('inv-sgst-amt').value) || 0,
+          roundOff: Number(document.getElementById('inv-round-off').value) || 0,
+          totalAmount: Number(document.getElementById('inv-total-amount').value) || 0,
+          amountWords: (document.getElementById('inv-words').value || '').trim(),
+          compName: (document.getElementById('inv-comp-name').value || 'Dawa & Co.').trim(),
+          compAddress: (document.getElementById('inv-comp-address').value || state.company.address).trim(),
+          compGst: (document.getElementById('inv-comp-gst').value || '').trim(),
+          compPan: (document.getElementById('inv-comp-pan').value || '').trim(),
+          closingNote: (document.getElementById('inv-closing-note').value || state.company.closingNote).trim(),
+          createdAt: new Date().toISOString()
+        };
+      }
+
+      function saveCurrentInvoice() {
+        const existingId = document.getElementById('inv-id').value;
+        const invoiceObj = getCurrentInvoiceDataFromForm();
+        const cust = state.customers.find(c => c.id === invoiceObj.customerId);
+        const unit = cust && (cust.units || []).find(u => u.unitId === invoiceObj.unitId);
+
+        const updateUnitDefault = document.getElementById('inv-update-unit-default-amt').checked;
+        if (unit && updateUnitDefault && invoiceObj.baseAmount > 0) {
+          unit.baseAmount = invoiceObj.baseAmount;
+          if (invoiceObj.periodFrom) unit.periodFrom = invoiceObj.periodFrom;
+          if (invoiceObj.periodTo) unit.periodTo = invoiceObj.periodTo;
+          populateUnitDropdownForCustomer(invoiceObj.customerId, invoiceObj.unitId);
+        }
+
+        if (existingId) {
+          const idx = state.invoices.findIndex(i => i.id === existingId);
+          if (idx !== -1) {
+            state.invoices[idx] = invoiceObj;
+          } else {
+            state.invoices.unshift(invoiceObj);
+          }
+        } else {
+          state.invoices.unshift(invoiceObj);
+          if (unit) {
+            unit.nextSeqNum = (parseInt(unit.nextSeqNum, 10) || 1) + 1;
+          }
+        }
+
+        document.getElementById('inv-id').value = invoiceObj.id;
+        document.getElementById('btn-open-last-preview').classList.remove('hidden');
+        saveState();
+
+        showInvoiceStep('preview');
+        showToast('Saved: ' + invoiceObj.invoiceNo);
+      }
+
+      // ============================================================================
+      // NATIVE VECTOR A4 PDF 1.4 GENERATOR (Supports Rent, Maintenance, DG Bill + Round Off)
+      // ============================================================================
+      function pdfEscape(str) {
+        return String(str == null ? '' : str)
+          .replace(/[^\x20-\x7E]/g, ' ')
+          .replace(/\\/g, '\\\\')
+          .replace(/\(/g, '\\(')
+          .replace(/\)/g, '\\)');
+      }
+
+      function wrapTextLines(text, maxChars) {
+        const rawLines = String(text || '').split(/\r?\n/);
+        const result = [];
+        rawLines.forEach(raw => {
+          const words = raw.trim().split(/\s+/);
+          if (words.length === 0 || (words.length === 1 && !words[0])) {
+            result.push('');
+            return;
+          }
+          let cur = words[0];
+          for (let i = 1; i < words.length; i++) {
+            if ((cur + ' ' + words[i]).length <= maxChars) {
+              cur += ' ' + words[i];
+            } else {
+              result.push(cur);
+              cur = words[i];
+            }
+          }
+          result.push(cur);
+        });
+        return result;
+      }
+
+      function buildNativeVectorPDFBytes(inv) {
+        const W = 595.28;
+        const cmds = [];
+
+        function text(x, y, size, isBold, str) {
+          const font = isBold ? '/F2' : '/F1';
+          cmds.push(`BT ${font} ${size} Tf 1 0 0 1 ${x.toFixed(2)} ${y.toFixed(2)} Tm (${pdfEscape(str)}) Tj ET`);
+        }
+
+        function textCenter(cx, y, size, isBold, str) {
+          const s = String(str || '');
+          const avgFactor = isBold ? 0.54 : 0.50;
+          const estW = s.length * size * avgFactor;
+          text(cx - estW / 2, y, size, isBold, s);
+        }
+
+        function textRight(rx, y, size, isBold, str) {
+          const s = String(str || '');
+          const avgFactor = isBold ? 0.55 : 0.51;
+          const estW = s.length * size * avgFactor;
+          text(rx - estW, y, size, isBold, s);
+        }
+
+        function line(x1, y1, x2, y2, lw) {
+          cmds.push(`${(lw || 0.8).toFixed(2)} w ${x1.toFixed(2)} ${y1.toFixed(2)} m ${x2.toFixed(2)} ${y2.toFixed(2)} l S`);
+        }
+
+        function rect(x, y, w, h, lw) {
+          cmds.push(`${(lw || 1.0).toFixed(2)} w ${x.toFixed(2)} ${y.toFixed(2)} ${w.toFixed(2)} ${h.toFixed(2)} re S`);
+        }
+
+        const isDecimalStyle = (Number(inv.roundOff) !== 0) || (Number(inv.cgstAmt) % 1 !== 0) || inv.billType === 'DG Bill';
+
+        let y = 782;
+        textCenter(W / 2, y, 17, true, inv.compName || 'Dawa & Co.');
+        y -= 12;
+        line(44, y, W - 44, y, 0.75);
+        y -= 13;
+        textCenter(W / 2, y, 9.5, false, inv.compAddress || 'Land Lord Office, 93/E, Morland Road, Arab Stable, Opp. BEST Quarter, Mumbai - 400008.');
+        y -= 6;
+        line(44, y, W - 44, y, 0.75);
+
+        y -= 26;
+        const metaX = 44;
+        const colonX = 112;
+        const valX = 122;
+
+        text(metaX, y, 10.5, false, 'Date');
+        text(colonX, y, 10.5, false, ':');
+        text(valX, y, 10.5, false, inv.dateText || '');
+        y -= 15;
+
+        text(metaX, y, 10.5, false, 'Invoice No.');
+        text(colonX, y, 10.5, false, ':');
+        text(valX, y, 10.5, false, inv.invoiceNo || '');
+        y -= 15;
+
+        text(metaX, y, 10.5, false, 'GST No.');
+        text(colonX, y, 10.5, false, ':');
+        text(valX, y, 10.5, false, inv.compGst || '');
+        y -= 15;
+
+        if (inv.compPan) {
+          text(metaX, y, 10.5, false, 'PAN');
+          text(colonX, y, 10.5, false, ':');
+          text(valX, y, 10.5, false, inv.compPan);
+          y -= 15;
+        }
+
+        y -= 16;
+        text(metaX, y, 10.5, false, 'To,');
+        y -= 15;
+        text(metaX, y, 10.5, true, inv.partyName || '');
+        y -= 20;
+
+        const addrLines = String(inv.partyAddress || '').split(/\r?\n/).filter(Boolean);
+        addrLines.forEach(lineStr => {
+          text(metaX, y, 10.5, false, lineStr.trim());
+          y -= 14;
+        });
+
+        y -= 8;
+        text(metaX, y, 10.5, false, 'GST No.');
+        text(colonX, y, 10.5, false, ':');
+        text(valX, y, 10.5, false, inv.partyGst || '');
+        y -= 15;
+
+        if (inv.partyPan) {
+          text(metaX, y, 10.5, false, 'PAN');
+          text(colonX, y, 10.5, false, ':');
+          text(valX, y, 10.5, false, inv.partyPan);
+          y -= 15;
+        }
+
+        if (inv.partyAttn) {
+          y -= 4;
+          text(metaX, y, 10.5, true, 'Kind Attn');
+          text(colonX, y, 10.5, true, ':');
+          text(valX, y, 10.5, true, inv.partyAttn);
+          y -= 15;
+        }
+
+        y -= 14;
+        textCenter(W / 2, y, 11, true, 'TAX INVOICE');
+        y -= 12;
+
+        const tLeft = 44;
+        const tRight = W - 44;
+        const tWidth = tRight - tLeft;
+        const col1X = 80;
+        const col2X = 462;
+
+        const topTableY = y;
+        const hdrBotY = y - 24;
+        line(tLeft, hdrBotY, tRight, hdrBotY, 0.85);
+        textCenter((tLeft + col1X) / 2, y - 16, 10, true, 'S.N');
+        text(col1X + 8, y - 16, 10, true, 'Particulars');
+        textCenter((col2X + tRight) / 2, y - 16, 10, true, 'Amount (Rs.)');
+
+        // Row 1: Particulars
+        const partLines = wrapTextLines(inv.particulars || '', 64);
+        const row1H = Math.max(28, partLines.length * 15 + 12);
+        const row1BotY = hdrBotY - row1H;
+        line(tLeft, row1BotY, tRight, row1BotY, 0.85);
+        textCenter((tLeft + col1X) / 2, hdrBotY - 16, 10, false, '1');
+        partLines.forEach((pline, idx) => {
+          const boldLine = (idx === 0 && inv.billType === 'DG Bill');
+          text(col1X + 8, hdrBotY - 16 - idx * 15, 10, boldLine, pline);
+        });
+        const baseStr = isDecimalStyle ? formatAmountDisplay(inv.baseAmount, true) : String(Math.round(inv.baseAmount || 0));
+        if (isDecimalStyle) {
+          textRight(tRight - 10, hdrBotY - 16, 10, false, baseStr);
+        } else {
+          textCenter((col2X + tRight) / 2, hdrBotY - 16, 10, false, baseStr);
+        }
+
+        // Row 2: CGST
+        const row2H = isDecimalStyle ? 24 : 34;
+        const row2BotY = row1BotY - row2H;
+        line(tLeft, row2BotY, tRight, row2BotY, 0.85);
+        textCenter((tLeft + col1X) / 2, row1BotY - 16, 10, false, '2');
+        if (isDecimalStyle) {
+          text(col1X + 8, row1BotY - 16, 10, true, 'CGST @ ' + String(inv.cgstRate || 9) + '%');
+          textRight(tRight - 10, row1BotY - 16, 10, false, formatAmountDisplay(inv.cgstAmt, true));
+        } else {
+          text(col1X + 8, row1BotY - 14, 10, false, 'CGST @');
+          text(col1X + 8, row1BotY - 26, 10, false, String(inv.cgstRate || 9) + '%');
+          if (inv.sacCode) {
+            text(col1X + 120, row1BotY - 24, 10, false, '(Service Accounting Code : ' + inv.sacCode + ')');
+          }
+          textCenter((col2X + tRight) / 2, row1BotY - 18, 10, false, String(Math.round(inv.cgstAmt || 0)));
+        }
+
+        // Row 3: SGST
+        const row3H = isDecimalStyle ? 24 : 34;
+        const row3BotY = row2BotY - row3H;
+        line(tLeft, row3BotY, tRight, row3BotY, 0.85);
+        textCenter((tLeft + col1X) / 2, row2BotY - 16, 10, false, '3');
+        if (isDecimalStyle) {
+          text(col1X + 8, row2BotY - 16, 10, true, 'SGST @ ' + String(inv.sgstRate || 9) + '%');
+          textRight(tRight - 10, row2BotY - 16, 10, false, formatAmountDisplay(inv.sgstAmt, true));
+        } else {
+          text(col1X + 8, row2BotY - 14, 10, false, 'SGST @');
+          text(col1X + 8, row2BotY - 26, 10, false, String(inv.sgstRate || 9) + '%');
+          textCenter((col2X + tRight) / 2, row2BotY - 18, 10, false, String(Math.round(inv.sgstAmt || 0)));
+        }
+
+        let prevBotY = row3BotY;
+        let nextSn = 4;
+
+        // Optional Row 4: Round Off (for DG Bill / Decimal bills)
+        if (Number(inv.roundOff) !== 0) {
+          const rH = 24;
+          const rBotY = prevBotY - rH;
+          line(tLeft, rBotY, tRight, rBotY, 0.85);
+          textCenter((tLeft + col1X) / 2, prevBotY - 16, 10, false, '4');
+          text(col1X + 8, prevBotY - 16, 10, true, 'Round Off');
+          textRight(tRight - 10, prevBotY - 16, 10, false, Number(inv.roundOff).toFixed(2));
+          prevBotY = rBotY;
+          nextSn = 5;
+        }
+
+        // Final Row: Total
+        const rowTotalH = 25;
+        const rowTotalBotY = prevBotY - rowTotalH;
+        textCenter((tLeft + col1X) / 2, prevBotY - 16, 10, true, String(nextSn));
+        if (isDecimalStyle) {
+          textRight(col2X - 10, prevBotY - 16, 10, true, 'Total');
+          textRight(tRight - 10, prevBotY - 16, 10, true, 'Rs. ' + formatAmountDisplay(inv.totalAmount, true));
+        } else {
+          text(col1X + 8, prevBotY - 16, 10, true, 'Total');
+          textCenter((col2X + tRight) / 2, prevBotY - 16, 10, true, String(Math.round(inv.totalAmount || 0)));
+        }
+
+        const totalTableH = topTableY - rowTotalBotY;
+        rect(tLeft, rowTotalBotY, tWidth, totalTableH, 1.1);
+        line(col1X, topTableY, col1X, rowTotalBotY, 0.85);
+        line(col2X, topTableY, col2X, rowTotalBotY, 0.85);
+        if (!isDecimalStyle) {
+          line(col1X + 68, row1BotY, col1X + 68, row3BotY, 0.85);
+        }
+
+        y = rowTotalBotY - 22;
+        text(metaX, y, 10, true, '(In Words : ' + (inv.amountWords || '') + ')');
+
+        y -= 28;
+        text(metaX, y, 10, false, inv.closingNote || 'We request you to release the aforesaid payment at the earliest.');
+        y -= 26;
+        text(metaX, y, 10, false, 'Thanking you,');
+        y -= 26;
+
+        const isRealtyStyle = String(inv.compName || '').toLowerCase().includes('realty');
+        const declText = 'Declaration : We declared that this invoice shows the actual price of the Service described and that all particulars are true and correct.';
+        const declLines = wrapTextLines(declText, 88);
+
+        if (isRealtyStyle) {
+          text(metaX, y, 10.5, true, (inv.compName || 'Dawa Realty') + (String(inv.compName || '').endsWith('.') ? '' : '.'));
+          y -= 40;
+          text(metaX, y, 10, false, 'Authorised Signatory.');
+          y -= 26;
+          declLines.forEach((dline, idx) => {
+            if (idx === 0) {
+              text(metaX, y, 10, true, 'Declaration:');
+              text(metaX + 62, y, 10, false, dline.replace(/^Declaration\s*:\s*/i, ''));
+            } else {
+              text(metaX, y, 10, false, dline);
+            }
+            y -= 14;
+          });
+        } else {
+          declLines.forEach((dline, idx) => {
+            if (idx === 0) {
+              text(metaX, y, 10, true, 'Declaration :');
+              text(metaX + 66, y, 10, false, dline.replace(/^Declaration\s*:\s*/i, ''));
+            } else {
+              text(metaX, y, 10, false, dline);
+            }
+            y -= 14;
+          });
+          y -= 18;
+          text(metaX, y, 10.5, true, inv.compName || 'Dawa & Co.');
+          y -= 40;
+          text(metaX, y, 10, false, 'Authorised Signatory.');
+        }
+
+        const streamContent = cmds.join('\n');
+        const objects = [
+          '1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj',
+          '2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj',
+          '3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /Contents 6 0 R >>\nendobj',
+          '4 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>\nendobj',
+          '5 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>\nendobj',
+          `6 0 obj\n<< /Length ${streamContent.length} >>\nstream\n${streamContent}\nendstream\nendobj`
+        ];
+
+        let pdf = '%PDF-1.4\n';
+        const offsets = [0];
+        objects.forEach(obj => {
+          offsets.push(pdf.length);
+          pdf += obj + '\n';
+        });
+        const xrefStart = pdf.length;
+        pdf += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n`;
+        for (let i = 1; i <= objects.length; i++) {
+          pdf += String(offsets[i]).padStart(10, '0') + ' 00000 n \n';
+        }
+        pdf += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xrefStart}\n%%EOF`;
+
+        const bytes = new Uint8Array(pdf.length);
+        for (let i = 0; i < pdf.length; i++) {
+          bytes[i] = pdf.charCodeAt(i) & 0xff;
+        }
+        return bytes;
+      }
+
+      function downloadInvoicePDF(invObj) {
+        const data = invObj || getCurrentInvoiceDataFromForm();
+        if (invObj) {
+          loadInvoiceIntoForm(invObj, true);
+        }
+        const safeNo = (data.invoiceNo || 'Invoice').replace(/[^a-zA-Z0-9_-]/g, '_');
+        const filename = safeNo + '_' + (data.billMonth || 'Nov') + '-' + (data.billYear || '2026') + '.pdf';
+
+        const pdfBytes = buildNativeVectorPDFBytes(data);
+        const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 1500);
+        showToast('PDF: ' + filename);
+      }
+
+      window.__buildNativeVectorPDFBytes = buildNativeVectorPDFBytes;
+      window.__getCurrentInvoiceDataFromForm = getCurrentInvoiceDataFromForm;
+
+      function printInvoiceDirectly() {
+        updateLiveInvoicePreview();
+        const mount = document.getElementById('print-Mount');
+        const sourcePaper = document.getElementById('invoice-render-target');
+        mount.innerHTML = '';
+        const clone = sourcePaper.cloneNode(true);
+        clone.style.transform = 'none';
+        clone.style.position = 'static';
+        clone.style.margin = '0';
+        mount.appendChild(clone);
+        window.print();
+      }
+
+      // ==========================================
+      // TAB 2: SALES RECORD
+      // ==========================================
+      function getFilteredInvoices() {
+        const custFlt = document.getElementById('flt-customer').value;
+        const typeFlt = document.getElementById('flt-bill-type').value;
+        const monthFlt = document.getElementById('flt-month').value;
+        const yearFlt = document.getElementById('flt-year').value;
+        const q = (document.getElementById('flt-search').value || '').trim().toLowerCase();
+
+        return state.invoices.filter(inv => {
+          if (custFlt !== 'ALL' && inv.customerId !== custFlt) return false;
+          if (typeFlt !== 'ALL' && inv.billType !== typeFlt) return false;
+          if (monthFlt !== 'ALL' && inv.billMonth !== monthFlt) return false;
+          if (yearFlt !== 'ALL' && String(inv.billYear) !== String(yearFlt)) return false;
+          if (q) {
+            const hay = [
+              inv.invoiceNo,
+              inv.partyName,
+              inv.compName,
+              inv.unitLabel,
+              inv.billType,
+              inv.particulars,
+              inv.dateText
+            ].join(' ').toLowerCase();
+            if (!hay.includes(q)) return false;
+          }
+          return true;
+        });
+      }
+
+      function renderSalesTable() {
+        populateCustomerDropdowns();
+        const tbody = document.getElementById('sales-table-body');
+        const list = getFilteredInvoices();
+        tbody.innerHTML = '';
+
+        let sumBase = 0;
+        let sumGst = 0;
+        let sumGrand = 0;
+
+        if (list.length === 0) {
+          const tr = document.createElement('tr');
+          tr.innerHTML = '<td colspan="9" style="padding:24px;text-align:center;color:#94a3b8;">No matching records.</td>';
+          tbody.appendChild(tr);
+        } else {
+          list.forEach((inv, idx) => {
+            const base = Number(inv.baseAmount) || 0;
+            const gst = (Number(inv.cgstAmt) || 0) + (Number(inv.sgstAmt) || 0);
+            const total = Number(inv.totalAmount) || 0;
+            sumBase += base;
+            sumGst += gst;
+            sumGrand += total;
+
+            const tr = document.createElement('tr');
+            tr.style.borderBottom = '1px solid #e2e8f0';
+            let badgeStyle = 'background:#dcfce7;color:#14532d;border:1px solid #86efac;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:600;';
+            if (inv.billType === 'Maintenance') {
+              badgeStyle = 'background:#f3e8ff;color:#581c87;border:1px solid #d8b4fe;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:600;';
+            } else if (inv.billType === 'DG Bill') {
+              badgeStyle = 'background:#fef08a;color:#713f12;border:1px solid #facc15;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:600;';
+            }
+
+            tr.innerHTML = `
+              <td style="padding:6px 8px;border-right:1px solid #e2e8f0;color:#64748b;" class="text-center mono">${idx + 1}</td>
+              <td style="padding:6px 8px;border-right:1px solid #e2e8f0;" class="font-bold mono">${escapeHtml(inv.invoiceNo)}</td>
+              <td style="padding:6px 8px;border-right:1px solid #e2e8f0;">${escapeHtml(inv.dateText)}</td>
+              <td style="padding:6px 8px;border-right:1px solid #e2e8f0;">
+                <div class="font-semibold">${escapeHtml(inv.partyName)}</div>
+                <div style="font-size:11px;color:#64748b;max-width:250px;" class="truncate">${escapeHtml(inv.unitLabel || inv.particulars)}</div>
+              </td>
+              <td style="padding:6px 8px;border-right:1px solid #e2e8f0;">
+                <span style="${badgeStyle}">${escapeHtml(inv.billType)}</span>
+              </td>
+              <td style="padding:6px 8px;border-right:1px solid #e2e8f0;" class="text-right mono">${base.toLocaleString('en-IN')}</td>
+              <td style="padding:6px 8px;border-right:1px solid #e2e8f0;color:#475569;" class="text-right mono">${gst.toLocaleString('en-IN')}</td>
+              <td style="padding:6px 8px;border-right:1px solid #e2e8f0;" class="text-right mono font-bold">${total.toLocaleString('en-IN')}</td>
+              <td style="padding:6px 8px;" class="text-center">
+                <div class="inline-flex items-center" style="gap:4px;">
+                  <button type="button" data-action="view-inv" data-id="${inv.id}" class="tally-btn" style="padding:2px 6px;font-size:11px;">View</button>
+                  <button type="button" data-action="edit-inv" data-id="${inv.id}" class="tally-btn tally-btn-accent" style="padding:2px 6px;font-size:11px;">Edit</button>
+                  <button type="button" data-action="pdf-inv" data-id="${inv.id}" class="tally-btn tally-btn-success" style="padding:2px 6px;font-size:11px;">PDF</button>
+                  <button type="button" data-action="del-inv" data-id="${inv.id}" class="tally-btn tally-btn-danger" style="padding:2px 6px;font-size:11px;">Del</button>
+                </div>
+              </td>
+            `;
+            tbody.appendChild(tr);
+          });
+        }
+
+        document.getElementById('sum-count').textContent = String(list.length);
+        document.getElementById('sum-base').textContent = 'Rs. ' + Math.round(sumBase).toLocaleString('en-IN');
+        document.getElementById('sum-gst').textContent = 'Rs. ' + Math.round(sumGst).toLocaleString('en-IN');
+        document.getElementById('sum-grand').textContent = 'Rs. ' + Math.round(sumGrand).toLocaleString('en-IN');
+      }
+
+      // ==========================================
+      // TAB 3: CLIENTS REGISTER (2 SEPARATE SCREENS)
+      // ==========================================
+      function showCustomerSubScreen(screen) {
+        const listEl = document.getElementById('cust-screen-list');
+        const formEl = document.getElementById('cust-screen-form');
+        const btnList = document.getElementById('btn-cust-screen-list');
+        const btnForm = document.getElementById('btn-cust-screen-form');
+
+        if (screen === 'form') {
+          listEl.classList.add('hidden');
+          formEl.classList.remove('hidden');
+          btnList.classList.remove('tally-btn-primary');
+          btnForm.classList.add('tally-btn-primary');
+          setTimeout(() => {
+            const first = document.getElementById('cust-name');
+            if (first) first.focus();
+          }, 25);
+        } else {
+          formEl.classList.add('hidden');
+          listEl.classList.remove('hidden');
+          btnForm.classList.remove('tally-btn-primary');
+          btnList.classList.add('tally-btn-primary');
+          renderCustomersDirectory();
+        }
+      }
+
+      function renderCustomersDirectory() {
+        const container = document.getElementById('customers-cards-container');
+        container.innerHTML = '';
+
+        state.customers.forEach(c => {
+          const card = document.createElement('div');
+          card.style.cssText = 'border:1px solid #cbd5e1;border-radius:5px;background:#f8fafc;padding:10px;display:flex;flex-direction:column;justify-content:space-between;gap:8px;';
+          const unitsHtml = (c.units || []).map(u => `
+            <div style="padding:4px 7px;background:#ffffff;border:1px solid #e2e8f0;border-radius:3px;font-size:11px;" class="flex items-center justify-between">
+              <div class="flex items-center min-w-0" style="gap:5px;padding-right:6px;">
+                <span class="font-semibold truncate">${escapeHtml(u.unitLabel)}</span>
+                <span class="shrink-0" style="padding:1px 5px;border-radius:2px;background:#e2e8f0;color:#334155;font-size:9.5px;font-weight:600;">${escapeHtml(u.billType)}</span>
+              </div>
+              <div class="mono font-bold shrink-0">Rs. ${(Number(u.baseAmount) || 0).toLocaleString('en-IN')}</div>
+            </div>
+          `).join('');
+
+          card.innerHTML = `
+            <div style="display:flex;flex-direction:column;gap:4px;">
+              <div class="flex items-start justify-between" style="gap:6px;">
+                <div>
+                  <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#15803d;">${escapeHtml(c.compName || 'Dawa & Co.')}</div>
+                  <h3 style="font-size:13px;font-weight:700;margin:1px 0 0 0;color:#0f172a;">${escapeHtml(c.name)}</h3>
+                  <div class="mono" style="font-size:10.5px;color:#475569;">GST: ${escapeHtml(c.gst || '—')}${c.pan ? ' | PAN: ' + escapeHtml(c.pan) : ''}</div>
+                </div>
+                <span class="mono shrink-0" style="padding:2px 6px;font-size:10px;font-weight:700;background:#e2e8f0;color:#0f172a;border-radius:3px;">${(c.units || []).length} Bills</span>
+              </div>
+              <div style="font-size:11px;color:#475569;" class="whitespace-pre-line">${escapeHtml(c.address || '')}</div>
+              <div style="padding-top:3px;display:flex;flex-direction:column;gap:4px;">
+                ${unitsHtml}
+              </div>
+            </div>
+            <div class="flex items-center justify-between" style="padding-top:6px;border-top:1px solid #e2e8f0;gap:5px;">
+              <button type="button" data-action="bill-cust" data-id="${c.id}" class="tally-btn tally-btn-primary flex-1">+ Bill</button>
+              <button type="button" data-action="edit-cust" data-id="${c.id}" class="tally-btn">Edit</button>
+              <button type="button" data-action="del-cust" data-id="${c.id}" class="tally-btn tally-btn-danger">Del</button>
+            </div>
+          `;
+          container.appendChild(card);
+        });
+      }
+
+      // Dynamic Bill Row in Client Form (Supports Rent, Maintenance, DG Bill with Period, or ANY custom type!)
+      function createUnitRowElement(unitData) {
+        const u = unitData || {
+          unitId: 'unit_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+          unitLabel: '',
+          billType: 'Rent',
+          periodFrom: '',
+          periodTo: '',
+          particularsTemplate: 'Leave & licence fees for {MONTH} - {YEAR}.',
+          baseAmount: 0,
+          sacCode: '997212',
+          cgstRate: 9,
+          sgstRate: 9,
+          seqPrefix: 'DAW/2026-27/',
+          nextSeqNum: 1,
+          seqPad: 3
+        };
+
+        const div = document.createElement('div');
+        div.className = 'unit-template-row';
+        div.style.cssText = 'padding:8px;background:#f8fafc;border:1px solid #cbd5e1;border-radius:4px;display:flex;flex-direction:column;gap:6px;';
+        div.dataset.unitId = u.unitId;
+        div.dataset.sacCode = u.sacCode != null ? u.sacCode : '997212';
+        div.dataset.cgstRate = u.cgstRate != null ? u.cgstRate : 9;
+        div.dataset.sgstRate = u.sgstRate != null ? u.sgstRate : 9;
+        div.dataset.seqPad = u.seqPad || 3;
+
+        div.innerHTML = `
+          <div class="form-grid items-end">
+            <div class="col-span-3 m-col-6">
+              <label class="tally-label">Bill Name</label>
+              <input type="text" class="tally-input unit-field-label font-medium" value="${escapeAttr(u.unitLabel)}" />
+            </div>
+            <div class="col-span-2 m-col-6">
+              <label class="tally-label">Type (Any)</label>
+              <input type="text" list="bill-types-list" class="tally-input unit-field-type font-semibold" value="${escapeAttr(u.billType || 'Rent')}" />
+            </div>
+            <div class="col-span-2 m-col-4">
+              <label class="tally-label">Amount</label>
+              <input type="number" step="0.01" class="tally-input mono font-bold unit-field-amount" value="${Number(u.baseAmount) || 0}" />
+            </div>
+            <div class="col-span-2 m-col-4">
+              <label class="tally-label">Period From</label>
+              <input type="text" class="tally-input mono unit-field-pfrom" value="${escapeAttr(u.periodFrom || '')}" />
+            </div>
+            <div class="col-span-2 m-col-3">
+              <label class="tally-label">Period To</label>
+              <input type="text" class="tally-input mono unit-field-pto" value="${escapeAttr(u.periodTo || '')}" />
+            </div>
+            <div class="col-span-1 m-col-1 flex justify-end">
+              <button type="button" class="tally-btn tally-btn-danger btn-remove-unit-row w-full">✕</button>
+            </div>
+          </div>
+          <div class="form-grid items-end">
+            <div class="col-span-8 m-col-12">
+              <label class="tally-label">Particulars</label>
+              <input type="text" class="tally-input unit-field-particulars" value="${escapeAttr((u.particularsTemplate || '').replace(/\n/g, ' | '))}" />
+            </div>
+            <div class="col-span-2 m-col-6">
+              <label class="tally-label">Inv Prefix</label>
+              <input type="text" class="tally-input mono unit-field-prefix" value="${escapeAttr(u.seqPrefix || 'DAW/2026-27/')}" />
+            </div>
+            <div class="col-span-2 m-col-6">
+              <label class="tally-label">Next #</label>
+              <input type="number" class="tally-input mono unit-field-nextnum" value="${parseInt(u.nextSeqNum, 10) || 1}" />
+            </div>
+          </div>
+        `;
+
+        // Auto-set DG template if user changes Type to "DG Bill"
+        const typeInp = div.querySelector('.unit-field-type');
+        typeInp.addEventListener('change', () => {
+          if (typeInp.value.trim().toLowerCase() === 'dg bill') {
+            const partInp = div.querySelector('.unit-field-particulars');
+            if (!partInp.value || partInp.value.includes('Leave & licence')) {
+              partInp.value = 'DG Charges | (Period {PERIOD_FROM} to {PERIOD_TO}) | Bill No {INV_NO}';
+            }
+          }
+        });
+
+        div.querySelector('.btn-remove-unit-row').addEventListener('click', () => {
+          const allRows = document.querySelectorAll('#cust-units-container .unit-template-row');
+          if (allRows.length <= 1) {
+            showToast('Keep at least 1 bill.', true);
+            return;
+          }
+          div.remove();
+        });
+
+        return div;
+      }
+
+      function openCustomerFormForNew() {
+        document.getElementById('cust-edit-id').value = '';
+        document.getElementById('cust-form-title').textContent = 'Add Client';
+        document.getElementById('cust-comp-name').value = 'Dawa & Co.';
+        document.getElementById('cust-comp-gst').value = '27AAGFD1570N1Z7';
+        document.getElementById('cust-comp-pan').value = '';
+        document.getElementById('cust-name').value = '';
+        document.getElementById('cust-gst').value = '';
+        document.getElementById('cust-pan').value = '';
+        document.getElementById('cust-attn').value = '';
+        document.getElementById('cust-address').value = '';
+
+        const container = document.getElementById('cust-units-container');
+        container.innerHTML = '';
+        container.appendChild(createUnitRowElement(null));
+        showCustomerSubScreen('form');
+      }
+
+      function openCustomerFormForEdit(custId) {
+        const cust = state.customers.find(c => c.id === custId);
+        if (!cust) return;
+        document.getElementById('cust-edit-id').value = cust.id;
+        document.getElementById('cust-form-title').textContent = 'Edit: ' + cust.name;
+        document.getElementById('cust-comp-name').value = cust.compName || 'Dawa & Co.';
+        document.getElementById('cust-comp-gst').value = cust.compGst || '27AAGFD1570N1Z7';
+        document.getElementById('cust-comp-pan').value = cust.compPan || '';
+        document.getElementById('cust-name').value = cust.name || '';
+        document.getElementById('cust-gst').value = cust.gst || '';
+        document.getElementById('cust-pan').value = cust.pan || '';
+        document.getElementById('cust-attn').value = cust.attn || '';
+        document.getElementById('cust-address').value = cust.address || '';
+
+        const container = document.getElementById('cust-units-container');
+        container.innerHTML = '';
+        (cust.units || []).forEach(u => {
+          container.appendChild(createUnitRowElement(u));
+        });
+        if ((cust.units || []).length === 0) {
+          container.appendChild(createUnitRowElement(null));
+        }
+        showCustomerSubScreen('form');
+      }
+
+      function saveCustomerFromForm() {
+        const name = (document.getElementById('cust-name').value || '').trim();
+        if (!name) {
+          showToast('Enter Client Name', true);
+          document.getElementById('cust-name').focus();
+          return;
+        }
+        const editId = document.getElementById('cust-edit-id').value;
+        const unitEls = document.querySelectorAll('#cust-units-container .unit-template-row');
+        const units = [];
+        unitEls.forEach((row, idx) => {
+          const label = (row.querySelector('.unit-field-label').value || '').trim() || ('Bill ' + (idx + 1));
+          const billType = (row.querySelector('.unit-field-type').value || 'Rent').trim();
+          const baseAmount = Number(row.querySelector('.unit-field-amount').value) || 0;
+          const periodFrom = (row.querySelector('.unit-field-pfrom').value || '').trim();
+          const periodTo = (row.querySelector('.unit-field-pto').value || '').trim();
+          const rawPart = (row.querySelector('.unit-field-particulars').value || '').trim();
+          const particularsTemplate = (rawPart ? rawPart.replace(/\s*\|\s*/g, '\n') : ('Leave & licence fees for ' + label + ' for {MONTH} - {YEAR}.'));
+          const seqPrefix = (row.querySelector('.unit-field-prefix').value || 'DAW/2026-27/').trim();
+          const nextSeqNum = parseInt(row.querySelector('.unit-field-nextnum').value, 10) || 1;
+
+          units.push({
+            unitId: row.dataset.unitId || ('unit_' + Date.now() + '_' + idx),
+            unitLabel: label,
+            billType: billType,
+            periodFrom: periodFrom,
+            periodTo: periodTo,
+            particularsTemplate: particularsTemplate,
+            baseAmount: baseAmount,
+            sacCode: billType === 'DG Bill' ? '' : (row.dataset.sacCode || '997212'),
+            cgstRate: Number(row.dataset.cgstRate) || 9,
+            sgstRate: Number(row.dataset.sgstRate) || 9,
+            seqPrefix: seqPrefix,
+            nextSeqNum: nextSeqNum,
+            seqPad: parseInt(row.dataset.seqPad, 10) || 3
+          });
+        });
+
+        const existingCust = editId ? state.customers.find(c => c.id === editId) : null;
+        const custObj = {
+          id: editId || ('cust_' + Date.now()),
+          name: name,
+          gst: (document.getElementById('cust-gst').value || '').trim(),
+          pan: (document.getElementById('cust-pan').value || '').trim(),
+          attn: (document.getElementById('cust-attn').value || '').trim(),
+          address: document.getElementById('cust-address').value || '',
+          compName: (document.getElementById('cust-comp-name').value || 'Dawa & Co.').trim(),
+          compAddress: state.company.address,
+          compGst: (document.getElementById('cust-comp-gst').value || '27AAGFD1570N1Z7').trim(),
+          compPan: (document.getElementById('cust-comp-pan').value || '').trim(),
+          dateStyle: existingCust ? existingCust.dateStyle : 'ordinal',
+          defaultDay: existingCust ? existingCust.defaultDay : 1,
+          units: units
+        };
+
+        if (editId) {
+          const idx = state.customers.findIndex(c => c.id === editId);
+          if (idx !== -1) state.customers[idx] = custObj;
+        } else {
+          state.customers.push(custObj);
+        }
+
+        saveState();
+        populateCustomerDropdowns();
+        showCustomerSubScreen('list');
+        showToast('Saved: ' + custObj.name);
+      }
+
+      // ==========================================
+      // TAB 4: SEQUENCE TABLE
+      // ==========================================
+      function renderSequenceTable() {
+        const tbody = document.getElementById('sequence-table-body');
+        tbody.innerHTML = '';
+
+        state.customers.forEach(c => {
+          (c.units || []).forEach(u => {
+            const tr = document.createElement('tr');
+            tr.className = 'seq-row';
+            tr.style.borderBottom = '1px solid #e2e8f0';
+            tr.dataset.custId = c.id;
+            tr.dataset.unitId = u.unitId;
+            const previewNo = formatSequenceNumber(u.seqPrefix || 'DAW/2026-27/', u.nextSeqNum || 1, u.seqPad || 3);
+
+            tr.innerHTML = `
+              <td style="padding:6px 8px;border-right:1px solid #e2e8f0;" class="font-semibold">${escapeHtml(c.name)}</td>
+              <td style="padding:6px 8px;border-right:1px solid #e2e8f0;">${escapeHtml(u.unitLabel)}</td>
+              <td style="padding:6px 8px;border-right:1px solid #e2e8f0;">${escapeHtml(u.billType)}</td>
+              <td style="padding:6px 8px;border-right:1px solid #e2e8f0;">
+                <input type="text" class="tally-input mono seq-input-prefix" value="${escapeAttr(u.seqPrefix || 'DAW/2026-27/')}" />
+              </td>
+              <td style="padding:6px 8px;border-right:1px solid #e2e8f0;">
+                <input type="number" min="1" class="tally-input mono seq-input-num" value="${parseInt(u.nextSeqNum, 10) || 1}" />
+              </td>
+              <td style="padding:6px 8px;border-right:1px solid #e2e8f0;">
+                <input type="number" min="1" max="6" class="tally-input mono seq-input-pad" value="${parseInt(u.seqPad, 10) || 3}" />
+              </td>
+              <td style="padding:6px 8px;" class="mono font-bold seq-preview-cell">${escapeHtml(previewNo)}</td>
+            `;
+
+            const updateRowPreview = () => {
+              const p = tr.querySelector('.seq-input-prefix').value;
+              const n = tr.querySelector('.seq-input-num').value;
+              const pad = tr.querySelector('.seq-input-pad').value;
+              tr.querySelector('.seq-preview-cell').textContent = formatSequenceNumber(p, n, pad);
+            };
+            tr.querySelector('.seq-input-prefix').addEventListener('input', updateRowPreview);
+            tr.querySelector('.seq-input-num').addEventListener('input', updateRowPreview);
+            tr.querySelector('.seq-input-pad').addEventListener('input', updateRowPreview);
+
+            tbody.appendChild(tr);
+          });
+        });
+      }
+
+      function saveAllSequencesFromTable() {
+        const rows = document.querySelectorAll('#sequence-table-body .seq-row');
+        rows.forEach(tr => {
+          const cust = state.customers.find(c => c.id === tr.dataset.custId);
+          if (!cust) return;
+          const unit = (cust.units || []).find(u => u.unitId === tr.dataset.unitId);
+          if (!unit) return;
+          unit.seqPrefix = tr.querySelector('.seq-input-prefix').value || 'DAW/2026-27/';
+          unit.nextSeqNum = parseInt(tr.querySelector('.seq-input-num').value, 10) || 1;
+          unit.seqPad = parseInt(tr.querySelector('.seq-input-pad').value, 10) || 3;
+        });
+        saveState();
+        showToast('Sequences Saved');
+      }
+
+      // ==========================================
+      // TAB 5: BACKUP & RESTORE
+      // ==========================================
+      function updateHeaderAndStats() {
+        document.getElementById('hdr-company-name').textContent = state.company.name || 'Dawa & Co.';
+        document.getElementById('hdr-company-gst').textContent = state.company.gst || '27AAGFD1570N1Z7';
+        document.getElementById('badge-sales-count').textContent = String(state.invoices.length);
+        document.getElementById('badge-cust-count').textContent = String(state.customers.length);
+
+        const totalUnits = state.customers.reduce((acc, c) => acc + ((c.units || []).length), 0);
+        document.getElementById('stat-company').textContent = state.company.name || 'Dawa & Co.';
+        document.getElementById('stat-customers').textContent = String(state.customers.length);
+        document.getElementById('stat-units').textContent = String(totalUnits);
+        document.getElementById('stat-invoices').textContent = String(state.invoices.length);
+      }
+
+      function downloadFullBackupJSON() {
+        const payload = JSON.stringify(state, null, 2);
+        const blob = new Blob([payload], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        const dateTag = new Date().toISOString().slice(0, 10);
+        a.href = url;
+        a.download = 'Dawa_Backup_' + dateTag + '.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast('Backup Downloaded');
+      }
+
+      function restoreFromJSONString(rawJson) {
+        try {
+          const parsed = JSON.parse(rawJson);
+          if (!isValidState(parsed)) {
+            showToast('Invalid backup file.', true);
+            return false;
+          }
+          state = parsed;
+          saveState();
+          populateCustomerDropdowns();
+          startNewInvoice();
+          renderSalesTable();
+          renderCustomersDirectory();
+          showToast('Restored (' + state.invoices.length + ' invoices)');
+          return true;
+        } catch (err) {
+          showToast('Invalid JSON.', true);
+          return false;
+        }
+      }
+
+      function exportSalesCSV() {
+        const list = getFilteredInvoices();
+        const headers = ['Invoice No', 'Date', 'Month', 'Year', 'Company', 'Client', 'Client GST', 'Bill', 'Type', 'Base', 'CGST', 'SGST', 'Round Off', 'Total'];
+        const rows = [headers.join(',')];
+        list.forEach(inv => {
+          const row = [
+            csvEscape(inv.invoiceNo),
+            csvEscape(inv.dateText),
+            csvEscape(inv.billMonth),
+            inv.billYear,
+            csvEscape(inv.compName),
+            csvEscape(inv.partyName),
+            csvEscape(inv.partyGst),
+            csvEscape(inv.unitLabel),
+            csvEscape(inv.billType),
+            inv.baseAmount,
+            inv.cgstAmt,
+            inv.sgstAmt,
+            inv.roundOff || 0,
+            inv.totalAmount
+          ];
+          rows.push(row.join(','));
+        });
+        const blob = new Blob([rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'Sales_Register.csv';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast('CSV Exported');
+      }
+
+      function openConfirmModal(title, message, onConfirm) {
+        document.getElementById('modal-title').textContent = title;
+        document.getElementById('modal-message').textContent = message;
+        modalConfirmCallback = onConfirm;
+        const modal = document.getElementById('app-modal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.getElementById('modal-btn-confirm').focus();
+      }
+
+      function closeConfirmModal() {
+        const modal = document.getElementById('app-modal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        modalConfirmCallback = null;
+      }
+
+      // ==========================================
+      // TALLY KEYBOARD ENGINE
+      // ==========================================
+      function getVisibleNavigableInputs() {
+        let selector = '';
+        if (currentTab === 'invoice' && currentInvoiceStep === 'form') {
+          selector = '#invoice-entry-form [data-tally-nav]:not([disabled])';
+        } else if (currentTab === 'customers' && !document.getElementById('cust-screen-form').classList.contains('hidden')) {
+          selector = '#customer-reg-form input:not([type="hidden"]), #customer-reg-form select, #customer-reg-form textarea, #btn-cust-save';
+        } else if (currentTab === 'sequence') {
+          selector = '#sequence-table-body input, #btn-seq-save-all';
+        } else {
+          return [];
+        }
+        return Array.from(document.querySelectorAll(selector))
+          .filter(el => el.offsetParent !== null)
+          .sort((a, b) => (parseInt(a.dataset.tallyNav, 10) || 999) - (parseInt(b.dataset.tallyNav, 10) || 999));
+      }
+
+      function moveFocus(delta) {
+        const list = getVisibleNavigableInputs();
+        if (list.length === 0) return;
+        const idx = list.indexOf(document.activeElement);
+        if (idx === -1) {
+          list[0].focus();
+          return;
+        }
+        const nextIdx = Math.max(0, Math.min(list.length - 1, idx + delta));
+        const target = list[nextIdx];
+        if (target) {
+          target.focus();
+          if (typeof target.select === 'function' && target.tagName === 'INPUT') {
+            target.select();
+          }
+        }
+      }
+
+      document.addEventListener('keydown', function (e) {
+        const modalOpen = !document.getElementById('app-modal').classList.contains('hidden');
+        if (modalOpen) {
+          if (e.key === 'Escape') {
+            e.preventDefault();
+            closeConfirmModal();
+          } else if (e.key === 'Enter') {
+            e.preventDefault();
+            if (modalConfirmCallback) modalConfirmCallback();
+            closeConfirmModal();
+          }
+          return;
+        }
+
+        if (e.key === 'F1' || (e.altKey && e.key === '1')) { e.preventDefault(); switchTab('invoice'); return; }
+        if (e.key === 'F2' || (e.altKey && e.key === '2')) { e.preventDefault(); switchTab('sales'); return; }
+        if (e.key === 'F3' || (e.altKey && e.key === '3')) { e.preventDefault(); switchTab('customers'); return; }
+        if (e.key === 'F4' || (e.altKey && e.key === '4')) { e.preventDefault(); switchTab('sequence'); return; }
+        if (e.key === 'F5' || (e.altKey && e.key === '5')) { e.preventDefault(); switchTab('backup'); return; }
+
+        if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
+          e.preventDefault();
+          if (currentTab === 'invoice') {
+            saveCurrentInvoice();
+          } else if (currentTab === 'customers' && !document.getElementById('cust-screen-form').classList.contains('hidden')) {
+            saveCustomerFromForm();
+          } else if (currentTab === 'sequence') {
+            saveAllSequencesFromTable();
+          }
+          return;
+        }
+
+        const active = document.activeElement;
+        if (!active) return;
+
+        if (e.key === 'Enter') {
+          if (active.id === 'btn-form-submit-save') {
+            e.preventDefault();
+            saveCurrentInvoice();
+            return;
+          }
+          if (active.id === 'btn-cust-save') {
+            e.preventDefault();
+            saveCustomerFromForm();
+            return;
+          }
+          if (active.tagName === 'BUTTON') {
+            return;
+          }
+          if (e.shiftKey) {
+            e.preventDefault();
+            moveFocus(-1);
+          } else {
+            const list = getVisibleNavigableInputs();
+            if (list.includes(active)) {
+              e.preventDefault();
+              moveFocus(1);
+            }
+          }
+        } else if (e.key === 'Backspace') {
+          const isSelect = active.tagName === 'SELECT';
+          const isEmptyInput = (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA') &&
+            (active.value === '' || (active.selectionStart === 0 && active.selectionEnd === 0 && active.value.length === 0));
+          if (isSelect || isEmptyInput) {
+            const list = getVisibleNavigableInputs();
+            if (list.includes(active)) {
+              e.preventDefault();
+              moveFocus(-1);
+            }
+          }
+        } else if (e.key === 'Escape') {
+          if (currentTab === 'invoice' && currentInvoiceStep === 'preview') {
+            e.preventDefault();
+            showInvoiceStep('form');
+            return;
+          }
+          const list = getVisibleNavigableInputs();
+          if (list.includes(active)) {
+            e.preventDefault();
+            moveFocus(-1);
+          }
+        }
+      });
+
+      // ==========================================
+      // EVENT LISTENERS
+      // ==========================================
+      function deleteOrClearCurrentInvoice() {
+        const curId = document.getElementById('inv-id').value;
+        if (!curId) {
+          startNewInvoice();
+          return;
+        }
+        openConfirmModal(
+          'Delete Invoice',
+          'Delete Invoice ' + document.getElementById('inv-number').value + '?',
+          () => {
+            state.invoices = state.invoices.filter(i => i.id !== curId);
+            saveState();
+            startNewInvoice();
+            showToast('Deleted');
+          }
+        );
+      }
+
+      function bindEvents() {
+        document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+          btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+        });
+
+        document.getElementById('btn-download-offline-app').addEventListener('click', downloadStandaloneOfflineApp);
+        document.getElementById('btn-backup-offline-html').addEventListener('click', downloadStandaloneOfflineApp);
+
+        document.getElementById('btn-toggle-period').addEventListener('click', () => {
+          document.getElementById('period-fields-box').classList.toggle('hidden');
+        });
+        document.getElementById('btn-toggle-extra-fields').addEventListener('click', () => {
+          document.getElementById('extra-fields-box').classList.toggle('hidden');
+        });
+
+        document.getElementById('inv-customer-select').addEventListener('change', (e) => {
+          populateUnitDropdownForCustomer(e.target.value);
+          applySelectedCustomerAndUnit(false);
+        });
+        document.getElementById('inv-unit-select').addEventListener('change', () => {
+          applySelectedCustomerAndUnit(false);
+        });
+
+        document.getElementById('inv-bill-month').addEventListener('change', () => {
+          syncParticularsMonthYear(false);
+          const custId = document.getElementById('inv-customer-select').value;
+          const cust = state.customers.find(c => c.id === custId);
+          const m = document.getElementById('inv-bill-month').value;
+          const y = document.getElementById('inv-bill-year').value;
+          const isDG = document.getElementById('inv-bill-type').value === 'DG Bill';
+          document.getElementById('inv-date-text').value = formatCustomerDate(
+            cust ? cust.defaultDay : 1,
+            m,
+            y,
+            cust ? cust.dateStyle : 'ordinal',
+            isDG
+          );
+          updateLiveInvoicePreview();
+        });
+        document.getElementById('inv-bill-year').addEventListener('input', () => {
+          syncParticularsMonthYear(false);
+          const custId = document.getElementById('inv-customer-select').value;
+          const cust = state.customers.find(c => c.id === custId);
+          const m = document.getElementById('inv-bill-month').value;
+          const y = document.getElementById('inv-bill-year').value;
+          const isDG = document.getElementById('inv-bill-type').value === 'DG Bill';
+          document.getElementById('inv-date-text').value = formatCustomerDate(
+            cust ? cust.defaultDay : 1,
+            m,
+            y,
+            cust ? cust.dateStyle : 'ordinal',
+            isDG
+          );
+          updateLiveInvoicePreview();
+        });
+
+        ['inv-period-from', 'inv-period-to', 'inv-number'].forEach(id => {
+          document.getElementById(id).addEventListener('input', () => {
+            syncParticularsMonthYear(false);
+            updateLiveInvoicePreview();
+          });
+        });
+
+        document.getElementById('inv-bill-type').addEventListener('change', () => {
+          recalculateTaxesAndTotal(true);
+          updateLiveInvoicePreview();
+        });
+
+        document.getElementById('btn-reset-particulars').addEventListener('click', () => {
+          syncParticularsMonthYear(true);
+          updateLiveInvoicePreview();
+        });
+
+        ['inv-base-amount', 'inv-cgst-rate', 'inv-sgst-rate'].forEach(id => {
+          document.getElementById(id).addEventListener('input', () => {
+            recalculateTaxesAndTotal(true);
+            updateLiveInvoicePreview();
+          });
+        });
+
+        ['inv-cgst-amt', 'inv-sgst-amt', 'inv-round-off'].forEach(id => {
+          document.getElementById(id).addEventListener('input', () => {
+            recalculateTaxesAndTotal(false);
+            updateLiveInvoicePreview();
+          });
+        });
+
+        [
+          'inv-date-text', 'inv-party-name', 'inv-party-gst', 'inv-party-pan',
+          'inv-party-address', 'inv-party-attn', 'inv-sac-code', 'inv-particulars',
+          'inv-words', 'inv-comp-name', 'inv-comp-gst', 'inv-comp-pan', 'inv-comp-address',
+          'inv-closing-note'
+        ].forEach(id => {
+          document.getElementById(id).addEventListener('input', updateLiveInvoicePreview);
+        });
+
+        document.getElementById('btn-form-submit-save').addEventListener('click', saveCurrentInvoice);
+        document.getElementById('btn-inv-save').addEventListener('click', saveCurrentInvoice);
+        document.getElementById('btn-inv-new').addEventListener('click', startNewInvoice);
+        document.getElementById('btn-form-new').addEventListener('click', startNewInvoice);
+        document.getElementById('btn-open-last-preview').addEventListener('click', () => showInvoiceStep('preview'));
+        document.getElementById('btn-inv-edit-unlock').addEventListener('click', () => {
+          showInvoiceStep('form');
+          setTimeout(() => {
+            const amt = document.getElementById('inv-base-amount');
+            if (amt) { amt.focus(); amt.select(); }
+          }, 30);
+        });
+        document.getElementById('btn-inv-pdf').addEventListener('click', () => downloadInvoicePDF(null));
+        document.getElementById('btn-inv-print').addEventListener('click', printInvoiceDirectly);
+        document.getElementById('btn-inv-delete').addEventListener('click', deleteOrClearCurrentInvoice);
+
+        document.getElementById('btn-mob-form').addEventListener('click', () => showInvoiceStep('form'));
+        document.getElementById('btn-mob-preview').addEventListener('click', () => showInvoiceStep('preview'));
+        document.getElementById('btn-form-edit').addEventListener('click', () => showInvoiceStep('form'));
+        document.getElementById('btn-form-pdf').addEventListener('click', () => downloadInvoicePDF(null));
+
+        ['flt-customer', 'flt-bill-type', 'flt-month', 'flt-year'].forEach(id => {
+          document.getElementById(id).addEventListener('change', renderSalesTable);
+        });
+        document.getElementById('flt-search').addEventListener('input', renderSalesTable);
+        document.getElementById('btn-flt-reset').addEventListener('click', () => {
+          document.getElementById('flt-customer').value = 'ALL';
+          document.getElementById('flt-bill-type').value = 'ALL';
+          document.getElementById('flt-month').value = 'ALL';
+          document.getElementById('flt-year').value = 'ALL';
+          document.getElementById('flt-search').value = '';
+          renderSalesTable();
+        });
+        document.getElementById('btn-sales-export-csv').addEventListener('click', exportSalesCSV);
+        document.getElementById('btn-sales-new-inv').addEventListener('click', () => {
+          switchTab('invoice');
+          startNewInvoice();
+        });
+
+        document.getElementById('sales-table-body').addEventListener('click', (e) => {
+          const btn = e.target.closest('button[data-action]');
+          if (!btn) return;
+          const id = btn.dataset.id;
+          const inv = state.invoices.find(i => i.id === id);
+          if (!inv) return;
+
+          if (btn.dataset.action === 'view-inv') {
+            switchTab('invoice');
+            loadInvoiceIntoForm(inv, true);
+          } else if (btn.dataset.action === 'edit-inv') {
+            switchTab('invoice');
+            loadInvoiceIntoForm(inv, false);
+          } else if (btn.dataset.action === 'pdf-inv') {
+            downloadInvoicePDF(inv);
+          } else if (btn.dataset.action === 'del-inv') {
+            openConfirmModal(
+              'Delete Invoice',
+              'Delete ' + inv.invoiceNo + '?',
+              () => {
+                state.invoices = state.invoices.filter(i => i.id !== id);
+                saveState();
+                renderSalesTable();
+                showToast('Deleted');
+              }
+            );
+          }
+        });
+
+        document.getElementById('btn-cust-screen-list').addEventListener('click', () => showCustomerSubScreen('list'));
+        document.getElementById('btn-cust-screen-form').addEventListener('click', openCustomerFormForNew);
+        document.getElementById('btn-cust-cancel').addEventListener('click', () => showCustomerSubScreen('list'));
+        document.getElementById('btn-cust-save').addEventListener('click', saveCustomerFromForm);
+        document.getElementById('btn-add-unit-row').addEventListener('click', () => {
+          document.getElementById('cust-units-container').appendChild(createUnitRowElement(null));
+        });
+
+        document.getElementById('customers-cards-container').addEventListener('click', (e) => {
+          const btn = e.target.closest('button[data-action]');
+          if (!btn) return;
+          const cid = btn.dataset.id;
+          if (btn.dataset.action === 'bill-cust') {
+            switchTab('invoice');
+            startNewInvoice();
+            document.getElementById('inv-customer-select').value = cid;
+            populateUnitDropdownForCustomer(cid);
+            applySelectedCustomerAndUnit(false);
+          } else if (btn.dataset.action === 'edit-cust') {
+            openCustomerFormForEdit(cid);
+          } else if (btn.dataset.action === 'del-cust') {
+            const cust = state.customers.find(c => c.id === cid);
+            if (!cust) return;
+            openConfirmModal(
+              'Delete Client',
+              'Remove ' + cust.name + '?',
+              () => {
+                state.customers = state.customers.filter(c => c.id !== cid);
+                saveState();
+                populateCustomerDropdowns();
+                renderCustomersDirectory();
+                showToast('Deleted');
+              }
+            );
+          }
+        });
+
+        document.getElementById('btn-seq-save-all').addEventListener('click', saveAllSequencesFromTable);
+
+        document.getElementById('btn-backup-download').addEventListener('click', downloadFullBackupJSON);
+        document.getElementById('btn-backup-copy').addEventListener('click', () => {
+          const str = JSON.stringify(state);
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(str).then(() => showToast('Copied'));
+          } else {
+            const ta = document.createElement('textarea');
+            ta.value = str;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            showToast('Copied');
+          }
+        });
+
+        document.getElementById('input-restore-file').addEventListener('change', (e) => {
+          const file = e.target.files && e.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = function (evt) {
+            restoreFromJSONString(evt.target.result);
+            e.target.value = '';
+          };
+          reader.readAsText(file);
+        });
+
+        document.getElementById('btn-restore-paste-toggle').addEventListener('click', () => {
+          document.getElementById('paste-restore-box').classList.toggle('hidden');
+        });
+        document.getElementById('btn-cancel-paste-restore').addEventListener('click', () => {
+          document.getElementById('paste-restore-box').classList.add('hidden');
+        });
+        document.getElementById('btn-apply-paste-restore').addEventListener('click', () => {
+          const raw = document.getElementById('textarea-restore-json').value;
+          if (restoreFromJSONString(raw)) {
+            document.getElementById('paste-restore-box').classList.add('hidden');
+            document.getElementById('textarea-restore-json').value = '';
+          }
+        });
+
+        document.getElementById('btn-reset-demo-data').addEventListener('click', () => {
+          openConfirmModal(
+            'Reset Data',
+            'Restore default 3 Clients and 8 Invoices?',
+            () => {
+              state = getDefaultState();
+              saveState();
+              startNewInvoice();
+              renderSalesTable();
+              renderCustomersDirectory();
+              showToast('Restored');
+            }
+          );
+        });
+
+        document.getElementById('modal-btn-cancel').addEventListener('click', closeConfirmModal);
+        document.getElementById('modal-btn-confirm').addEventListener('click', () => {
+          if (modalConfirmCallback) modalConfirmCallback();
+          closeConfirmModal();
+        });
+      }
+
+      function escapeHtml(str) {
+        return String(str == null ? '' : str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+      function escapeAttr(str) {
+        return escapeHtml(str).replace(/'/g, '&#39;');
+      }
+      function csvEscape(val) {
+        const s = String(val == null ? '' : val).replace(/"/g, '""');
+        return '"' + s + '"';
+      }
+
+      function init() {
+        bindEvents();
+
+        // Attach live auto-save on every input/select change inside the Invoice Form
+        const formEl = document.getElementById('invoice-entry-form');
+        if (formEl) {
+          formEl.addEventListener('input', saveActiveFormDraft);
+          formEl.addEventListener('change', saveActiveFormDraft);
+        }
+
+        // Wire GitHub Cloud Sync UI
+        const ghCfg = loadGhConfig();
+        document.getElementById('gh-repo-input').value = ghCfg.repo || '';
+        document.getElementById('gh-token-input').value = ghCfg.token || '';
+
+        document.getElementById('btn-cloud-status').addEventListener('click', () => {
+          switchTab('backup');
+          document.getElementById('gh-repo-input').focus();
+        });
+        document.getElementById('btn-gh-connect').addEventListener('click', async () => {
+          const r = document.getElementById('gh-repo-input').value;
+          const t = document.getElementById('gh-token-input').value;
+          if (!r.trim() || !t.trim()) {
+            showToast('Enter GitHub Repo & Token', true);
+            return;
+          }
+          saveGhConfig(r, t);
+          const ok = await pullStateFromGitHub(false);
+          if (ok) {
+            await pushStateToGitHubNow();
+            showToast('GitHub Lifetime Cloud Auto-Sync Connected ✓');
+          }
+        });
+        document.getElementById('btn-gh-pull').addEventListener('click', () => {
+          pullStateFromGitHub(false);
+        });
+
+        // Persist before page unload
+        window.addEventListener('beforeunload', () => {
+          saveState(false, true);
+        });
+
+        updateHeaderAndStats();
+        populateCustomerDropdowns();
+        restoreDraftOrNewInvoice();
+
+        // Hydrate from IndexedDB (without overwriting first!) and pull from GitHub Cloud if configured
+        initIndexedDBAndHydrate();
+        if (ghCfg.repo && ghCfg.token) {
+          pullStateFromGitHub(true);
+        }
+      }
+
+      init();
+    })();
+  </script>
+</body>
+</html>
