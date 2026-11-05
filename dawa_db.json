@@ -453,15 +453,15 @@
   "activeDraft": {
     "customerId": "cust_atlas",
     "unitId": "unit_atlas_maint",
-    "billMonth": "November",
+    "billMonth": "December",
     "billYear": "2026",
-    "dateText": "1st November 2026",
+    "dateText": "1st December 2026",
     "invoiceNo": "DAW/2026-27/090",
     "billType": "Maintenance",
     "periodFrom": "",
     "periodTo": "",
-    "particulars": "Maintenance Charges for Unit No.301 at Mantri Alpine (14599 Sq.ft. @ 4/- per sq.ft.) for November - 2026.",
+    "particulars": "Maintenance Charges for Unit No.301 at Mantri Alpine (14599 Sq.ft. @ 4/- per sq.ft.) for December - 2026.",
     "baseAmount": "61316"
   },
-  "updatedAt": 1793883937063
+  "updatedAt": 1793883939004
 }
