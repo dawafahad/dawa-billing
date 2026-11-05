@@ -119,7 +119,7 @@
           "cgstRate": 9,
           "sgstRate": 9,
           "seqPrefix": "DAW/2026-27/",
-          "nextSeqNum": 177,
+          "nextSeqNum": 178,
           "seqPad": 3
         },
         {
@@ -165,6 +165,40 @@
     }
   ],
   "invoices": [
+    {
+      "id": "inv_1793884448721",
+      "customerId": "cust_shekhar",
+      "unitId": "unit_shekhar_1_2",
+      "unitLabel": "Unit 1 & 2 (Shop)",
+      "billType": "Rent",
+      "billMonth": "December",
+      "billYear": 2026,
+      "periodFrom": "",
+      "periodTo": "",
+      "dateText": "1-December-26",
+      "invoiceNo": "DAW/2026-27/177",
+      "partyName": "SHEKHAR TAILOR PRIVATE LIMITED",
+      "partyAddress": "Dawa Arcade,\n1881/A, Sadashiv Peth,\nBajirao Road,\nPune - 411030",
+      "partyGst": "27AAKCC2039A1Z3",
+      "partyPan": "",
+      "partyAttn": "",
+      "sacCode": "997212",
+      "particulars": "Leave & licence fees for December - 2026 of Unit No. 1 & 2. (Shop) at Dawa Arcade",
+      "baseAmount": 52470,
+      "cgstRate": 9,
+      "sgstRate": 9,
+      "cgstAmt": 4722,
+      "sgstAmt": 4722,
+      "roundOff": 0,
+      "totalAmount": 61914,
+      "amountWords": "sixty-one thousand, nine hundred fourteen",
+      "compName": "Dawa Realty",
+      "compAddress": "Land Lord Office, 93/E, Morland Road, Arab Stable, Opp. BEST Quarter, Mumbai - 400008.",
+      "compGst": "27AAKCC2039A1Z3",
+      "compPan": "AAKCC2039A",
+      "closingNote": "We request you to release the aforesaid payment at the earliest.",
+      "createdAt": "2026-11-05T13:14:08.721Z"
+    },
     {
       "id": "inv_1793884388686",
       "customerId": "cust_fintech",
@@ -531,5 +565,5 @@
     "particulars": "Leave & licence fees for December - 2026 of Unit No. 1 & 2. (Shop) at Dawa Arcade",
     "baseAmount": "52470"
   },
-  "updatedAt": 1793884440863
+  "updatedAt": 1793884448721
 }
