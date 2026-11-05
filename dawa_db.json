@@ -197,7 +197,7 @@
       "compGst": "27AAGFD1570N1Z7",
       "compPan": "",
       "closingNote": "We request you to release the aforesaid payment at the earliest.",
-      "createdAt": "2026-11-05T13:05:30.211Z"
+      "createdAt": "2026-11-05T13:05:32.448Z"
     },
     {
       "id": "inv_nov26_087",
@@ -463,5 +463,5 @@
     "particulars": "Leave & licence fees for Unit No.301 at Mantri Alpine (14599 Sq.ft.) for December - 2026.",
     "baseAmount": "667236"
   },
-  "updatedAt": 1793883930211
+  "updatedAt": 1793883932448
 }
