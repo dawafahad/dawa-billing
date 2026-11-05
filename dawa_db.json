@@ -557,7 +557,7 @@
     "unitId": "unit_fintech_301",
     "billMonth": "December",
     "billYear": "2026",
-    "dateText": "9-December-26",
+    "dateText": "1-December-26",
     "invoiceNo": "FT/2026-27/020",
     "billType": "Rent",
     "periodFrom": "",
@@ -565,5 +565,5 @@
     "particulars": "Leave & licence fees for Unit No.301 at Mantri Alpine (2764 Sq.ft.) for December - 2026. (Rent of Immovable Property)",
     "baseAmount": "217665"
   },
-  "updatedAt": 1793884576034
+  "updatedAt": 1793884597868
 }
