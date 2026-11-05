@@ -519,17 +519,17 @@
     }
   ],
   "activeDraft": {
-    "customerId": "cust_fintech",
-    "unitId": "unit_fintech_301",
+    "customerId": "cust_shekhar",
+    "unitId": "unit_shekhar_1_2",
     "billMonth": "December",
     "billYear": "2026",
-    "dateText": "9-December-26",
-    "invoiceNo": "FT/2026-27/019",
+    "dateText": "1-December-26",
+    "invoiceNo": "DAW/2026-27/177",
     "billType": "Rent",
     "periodFrom": "",
     "periodTo": "",
-    "particulars": "Leave & licence fees for Unit No.301 at Mantri Alpine (2764 Sq.ft.) for December - 2026. (Rent of Immovable Property)",
-    "baseAmount": "217665"
+    "particulars": "Leave & licence fees for December - 2026 of Unit No. 1 & 2. (Shop) at Dawa Arcade",
+    "baseAmount": "52470"
   },
-  "updatedAt": 1793884390698
+  "updatedAt": 1793884440863
 }
