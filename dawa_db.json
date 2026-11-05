@@ -197,7 +197,7 @@
       "compGst": "27AAKCC2039A1Z3",
       "compPan": "AAKCC2039A",
       "closingNote": "We request you to release the aforesaid payment at the earliest.",
-      "createdAt": "2026-11-05T13:14:08.721Z"
+      "createdAt": "2026-11-05T13:14:11.053Z"
     },
     {
       "id": "inv_1793884388686",
@@ -565,5 +565,5 @@
     "particulars": "Leave & licence fees for December - 2026 of Unit No. 1 & 2. (Shop) at Dawa Arcade",
     "baseAmount": "52470"
   },
-  "updatedAt": 1793884448721
+  "updatedAt": 1793884451054
 }
