@@ -485,17 +485,17 @@
     }
   ],
   "activeDraft": {
-    "customerId": "cust_atlas",
-    "unitId": "unit_atlas_maint",
+    "customerId": "cust_fintech",
+    "unitId": "unit_fintech_301",
     "billMonth": "December",
     "billYear": "2026",
-    "dateText": "1st December 2026",
-    "invoiceNo": "DAW/2026-27/090",
-    "billType": "Maintenance",
+    "dateText": "9-December-26",
+    "invoiceNo": "FT/2026-27/019",
+    "billType": "Rent",
     "periodFrom": "",
     "periodTo": "",
-    "particulars": "Maintenance Charges for Unit No.301 at Mantri Alpine (14599 Sq.ft. @ 4/- per sq.ft.) for December - 2026.",
-    "baseAmount": "61316"
+    "particulars": "Leave & licence fees for Unit No.301 at Mantri Alpine (2764 Sq.ft.) for December - 2026. (Rent of Immovable Property)",
+    "baseAmount": "217665"
   },
-  "updatedAt": 1793884361184
+  "updatedAt": 1793884386797
 }
