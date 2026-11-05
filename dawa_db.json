@@ -33,7 +33,7 @@
           "cgstRate": 9,
           "sgstRate": 9,
           "seqPrefix": "DAW/2026-27/",
-          "nextSeqNum": 89,
+          "nextSeqNum": 90,
           "seqPad": 3
         },
         {
@@ -165,6 +165,40 @@
     }
   ],
   "invoices": [
+    {
+      "id": "inv_1793883930211",
+      "customerId": "cust_atlas",
+      "unitId": "unit_atlas_rent",
+      "unitLabel": "Unit 301 - Rent",
+      "billType": "Rent",
+      "billMonth": "December",
+      "billYear": 2026,
+      "periodFrom": "",
+      "periodTo": "",
+      "dateText": "1st December 2026",
+      "invoiceNo": "DAW/2026-27/089",
+      "partyName": "Atlas Copco (India) Ltd.",
+      "partyAddress": "Mantri Alpine, Bavdhan,\nPune.",
+      "partyGst": "27AAACA4074D1Z2",
+      "partyPan": "",
+      "partyAttn": "Mr. Anant Murkute",
+      "sacCode": "997212",
+      "particulars": "Leave & licence fees for Unit No.301 at Mantri Alpine (14599 Sq.ft.) for December - 2026.",
+      "baseAmount": 667236,
+      "cgstRate": 9,
+      "sgstRate": 9,
+      "cgstAmt": 60051,
+      "sgstAmt": 60051,
+      "roundOff": 0,
+      "totalAmount": 787338,
+      "amountWords": "seven hundred eighty-seven thousand, three hundred thirty-eight",
+      "compName": "Dawa & Co.",
+      "compAddress": "Land Lord Office, 93/E, Morland Road, Arab Stable, Opp. BEST Quarter, Mumbai - 400008.",
+      "compGst": "27AAGFD1570N1Z7",
+      "compPan": "",
+      "closingNote": "We request you to release the aforesaid payment at the earliest.",
+      "createdAt": "2026-11-05T13:05:30.211Z"
+    },
     {
       "id": "inv_nov26_087",
       "customerId": "cust_atlas",
@@ -429,5 +463,5 @@
     "particulars": "Leave & licence fees for Unit No.301 at Mantri Alpine (14599 Sq.ft.) for December - 2026.",
     "baseAmount": "667236"
   },
-  "updatedAt": 1793883903706
+  "updatedAt": 1793883930211
 }
